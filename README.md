@@ -2,8 +2,6 @@
 
 A personal portfolio website showcasing my projects, certificates, blogs, and contact form. Built using **React**, **TailwindCSS**, and **Framer Motion**, this portfolio highlights my work in **Data Science, AI, and full-stack development**.
 
----
-
 ## 🚀 Features
 
 * **Hero Section:** Introduction with a short personal statement.
@@ -16,16 +14,12 @@ A personal portfolio website showcasing my projects, certificates, blogs, and co
 * **Fully Responsive:** Works on desktop, tablet, and mobile devices.
 * **Interactive Animations:** Powered by Framer Motion for smooth transitions.
 
----
-
 ## 💻 Tech Stack
 
 * **Frontend:** React, TailwindCSS
 * **Animations:** Framer Motion
 * **Email Integration:** [EmailJS](https://www.emailjs.com/)
 * **Icons:** Inline SVG for lightweight social links
-
----
 
 [//]: # ()
 [//]: # (## 📂 Project Structure)
@@ -75,8 +69,6 @@ A personal portfolio website showcasing my projects, certificates, blogs, and co
 
 [//]: # (```)
 
-[//]: # (---)
-
 
 ## ✉️ Contact Form Setup
 
@@ -104,7 +96,6 @@ This project uses **EmailJS** to send emails without exposing your personal addr
 
 [//]: # (```)
 
----
 
 ## 👩‍💻 About Me
 
@@ -114,7 +105,6 @@ I am a **Data Science and AI enthusiast** building intelligent systems and inter
 * Data pipelines and dashboards for actionable insights
 * Blogs documenting experiments, concepts, and learning
 
----
 
 ## 🔗 Links
 
@@ -122,7 +112,6 @@ I am a **Data Science and AI enthusiast** building intelligent systems and inter
 * [GitHub](https://github.com/teodora-taleska/)
 * [Portfolio Blog](#blogs)
 
----
 
 ## 📜 License
 
