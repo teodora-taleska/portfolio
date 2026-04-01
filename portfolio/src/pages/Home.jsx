@@ -6,6 +6,7 @@ import LanguagesSection from "../components/LanguagesSection";
 import Navbar from "../components/Navbar.jsx";
 import Projects from "../components/Projects.jsx";
 import Certificates from "../components/Certificates.jsx";
+import ContactForm from "../components/ContactForm.jsx";
 
 const blogs = [
   {
@@ -35,6 +36,7 @@ export default function Home() {
           <BlogSection blogs={blogs}/>
           <Certificates/>
           <EducationSection/>
+          <ContactForm/>
       </div>
   );
 }
