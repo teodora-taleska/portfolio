@@ -44,17 +44,15 @@ export default function Hero() {
             </motion.div>
 
             {/*<motion.h2*/}
-            {/*    className="text-2xl text-white/90 font-semibold mt-6 text-center max-w-lg"*/}
-            {/*    style={{*/}
-            {/*        opacity: useTransform(scrollY, [0, 200], [1, 0.8]),*/}
-            {/*    }}*/}
+            {/*  className="text-2xl text-white/90 font-semibold mt-6 text-center max-w-lg"*/}
+            {/*  style={{ opacity: useTransform(scrollY, [0, 200], [1, 0.8]) }}*/}
             {/*>*/}
-            {/*    Data, AI, and pipelines - from raw numbers to actionable insights.*/}
+            {/*  Data, AI, and pipelines — from raw numbers to actionable insights.*/}
             {/*</motion.h2>*/}
 
 
             <motion.a
-                href="#projects"
+                href="#certificates"
                 className="absolute bottom-10 text-gray-400 text-5xl"
                 animate={{y: [0, 15, 0]}}
                 transition={{repeat: Infinity, duration: 1}}
