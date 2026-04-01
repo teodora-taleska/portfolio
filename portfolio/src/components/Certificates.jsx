@@ -2,9 +2,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const certificates = [
-  { img: "/certificates/digital_marketing.png", title: "Digital Marketing" },
-  { img: "/certificates/deep_learning.png", title: "Deep Learning Specialization" },
-  { img: "/certificates/ai_healthcare.png", title: "AI in Healthcare" },
+  { img: "/certificates/python_lib.png" },
+  { img: "/certificates/advanced_python.jpeg" },
+  { img: "/certificates/digital_marketing.png" },
+  { img: "/certificates/stat3.jpeg"},
+  { img: "/certificates/applied_ml.jpeg" },
+  { img: "/certificates/python_dsa.jpeg" },
+  { img: "/certificates/python_trees.jpeg" },
+  { img: "/certificates/AI_intro.jpeg"},
+  { img: "/certificates/chatbots.jpeg" }
 ];
 
 export default function Certificates() {
@@ -18,7 +24,9 @@ export default function Certificates() {
 
     // Keyboard navigation
     const handleKey = (e) => {
+      // eslint-disable-next-line react-hooks/immutability
       if (e.key === "ArrowLeft") handlePrev();
+      // eslint-disable-next-line react-hooks/immutability
       if (e.key === "ArrowRight") handleNext();
     };
     window.addEventListener("keydown", handleKey);
@@ -39,10 +47,11 @@ export default function Certificates() {
     };
   }, []);
 
-  const handlePrev = () =>
-    setCurrent((prev) => (prev === 0 ? certificates.length - 1 : prev - 1));
   const handleNext = () =>
-    setCurrent((prev) => (prev === certificates.length - 1 ? 0 : prev + 1));
+    setCurrent((prev) => (prev < certificates.length - 1 ? prev + 1 : prev));
+
+  const handlePrev = () =>
+    setCurrent((prev) => (prev > 0 ? prev - 1 : 0));
 
   // Dynamic sizing
   const mainWidth = windowWidth > 1024 ? 700 : windowWidth > 768 ? 400 : 300;

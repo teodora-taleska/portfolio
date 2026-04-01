@@ -52,7 +52,7 @@ export default function Hero() {
 
 
             <motion.a
-                href="#certificates"
+                href="#projects"
                 className="absolute bottom-10 text-gray-400 text-5xl"
                 animate={{y: [0, 15, 0]}}
                 transition={{repeat: Infinity, duration: 1}}

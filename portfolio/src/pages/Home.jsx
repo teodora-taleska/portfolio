@@ -29,12 +29,12 @@ export default function Home() {
       <div className="bg-[#0B132B] text-[#EAEAEA] min-h-screen">
           <Navbar/>
           <Hero/>
-          <Certificates/>
           <Projects/>
           <ExperienceSection/>
-          <EducationSection/>
-          <LanguagesSection/>
+          {/*<LanguagesSection/>*/}
           <BlogSection blogs={blogs}/>
+          <Certificates/>
+          <EducationSection/>
       </div>
   );
 }
