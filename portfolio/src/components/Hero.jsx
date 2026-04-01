@@ -1,16 +1,16 @@
 import { motion, useScroll, useTransform } from "framer-motion";
+import CursorLight from "./CursorLight";
+import FloatingWords from "./FloatingWords";
 
 export default function Hero() {
   const { scrollY } = useScroll();
 
-  // Animate image scale
   const scale = useTransform(scrollY, [0, 400], [1, 0.75]);
-
-  // Animate image position (center → left)
   const x = useTransform(scrollY, [0, 400], [0, -200]);
 
   return (
     <section className="h-[200vh] relative">
+        <CursorLight />
 
       {/* STICKY CONTAINER */}
         <div className="sticky top-0 h-screen flex items-center justify-center">
@@ -21,41 +21,9 @@ export default function Hero() {
                 style={{scale, x}}
                 className="w-64 h-80 object-cover rounded-2xl shadow-2xl border border-[#D4AF37] z-10"
             />
-            <motion.div
-                className="absolute text-sm text-[#5BC0BE]"
-                style={{
-                    top: "20%",
-                    left: "40%",
-                }}
-                animate={{y: [0, -10, 0]}}
-                transition={{repeat: Infinity, duration: 3}}
-            >
-                Data Science
-            </motion.div>
 
-            <motion.div
-                className="absolute text-sm text-[#D4AF37]"
-                style={{
-                    top: "60%",
-                    left: "70%",
-                }}
-                animate={{y: [0, 10, 0]}}
-                transition={{repeat: Infinity, duration: 4}}
-            >
-                AI
-            </motion.div>
+            <FloatingWords/>
 
-            <motion.div
-                className="absolute text-sm text-white/70"
-                style={{
-                    top: "50%",
-                    left: "20%",
-                }}
-                animate={{y: [0, -8, 0]}}
-                transition={{repeat: Infinity, duration: 5}}
-            >
-                Systems
-            </motion.div>
 
             {/* TEXT (appears on scroll) */}
             <motion.div
@@ -65,19 +33,31 @@ export default function Hero() {
                     x: useTransform(scrollY, [150, 400], [80, 0]),
                 }}
             >
-                <h1 className="text-4xl font-light">Hi, I'm Tea</h1>
+                <h1 className="text-4xl font-light">Hi, I'm Teodora</h1>
 
                 <p className="text-[#5BC0BE] mt-4 leading-relaxed">
-                    I build intelligent systems from data,
-                    focusing on transforming complex information into meaningful insights.
+                    I design intelligent data pipelines and AI systems that transform complex datasets into actionable
+                    insights. From predictive models to automated decision tools, I help businesses and hospitals
+                    leverage deep learning, transformers, and statistical methods to make smarter decisions. I also
+                    document my research and experiments in a blog, sharing my journey in AI and data science.
                 </p>
             </motion.div>
+
+            {/*<motion.h2*/}
+            {/*    className="text-2xl text-white/90 font-semibold mt-6 text-center max-w-lg"*/}
+            {/*    style={{*/}
+            {/*        opacity: useTransform(scrollY, [0, 200], [1, 0.8]),*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    Data, AI, and pipelines - from raw numbers to actionable insights.*/}
+            {/*</motion.h2>*/}
+
 
             <motion.a
                 href="#projects"
                 className="absolute bottom-10 text-gray-400 text-5xl"
                 animate={{y: [0, 15, 0]}}
-                transition={{repeat: Infinity, duration: 1.2}}
+                transition={{repeat: Infinity, duration: 1}}
             >
                 ↓
             </motion.a>
