@@ -31,15 +31,28 @@ export default function FloatingWords() {
             pointerEvents: "none",
           }}
           initial={{ y: 0, x: 0, scale: 0 }}
-          animate={{
-            x: [0, w.left],
-            y: [0, w.top],
-            scale: [0, 1],
-          }}
+          // animate={{
+          //   x: [0, w.left],
+          //   y: [0, w.top],
+          //   scale: [0, 1],
+          // }}
+            animate={
+              open
+                ? {
+                    x: w.left,
+                    y: w.top,
+                    scale: 1,
+                  }
+                : {
+                    x: 0,
+                    y: 0,
+                    scale: 0.6, // slightly shrink when going back
+                  }
+            }
           transition={{
             duration: 1.5,
-            delay: w.delay,
-            ease: "easeOut",
+            delay: open ? w.delay : 0,
+            ease: "easeInOut",
           }}
         >
           <div className="flex items-center justify-center rounded-full border border-white/40 px-3 py-1 bg-white/5 backdrop-blur-sm shadow-lg">
