@@ -1,6 +1,6 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import {motion, useMotionValueEvent, useScroll, useTransform} from "framer-motion";
 
-export default function CodeToAppAnimation({ scrollTarget }) {
+export default function CodeToAppAnimation({ scrollTarget, onAnimationComplete }) {
   const { scrollYProgress } = useScroll({
     target: scrollTarget,
     offset: ["start start", "end end"],
@@ -90,18 +90,20 @@ export default function CodeToAppAnimation({ scrollTarget }) {
     [0.8, 0]
   );
 
+  // 🔔 Trigger callback when scrollYProgress reaches the end of pause (0.75)
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest >= 0.75 && onAnimationComplete) {
+      onAnimationComplete();
+    }
+  });
+
   return (
     <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-
       {/* Particles */}
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          style={{
-            y: particlesY,
-            opacity: particlesOpacity,
-            left: `${20 + i * 10}%`,
-          }}
+          style={{ y: particlesY, opacity: particlesOpacity, left: `${20 + i * 10}%` }}
           className="absolute w-2 h-2 bg-[#FFD700] rounded-full z-10"
         />
       ))}
@@ -121,12 +123,6 @@ export default function CodeToAppAnimation({ scrollTarget }) {
         <div>const App = () =&gt; &lt;View /&gt;;</div>
         <div>export default App;</div>
       </motion.div>
-
-      {/* Arrow */}
-      <motion.div
-        style={{ opacity: codeOpacity }}
-        className="absolute top-[35%] w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-[#D4AF37] z-20"
-      />
 
       {/* WEB PREVIEW */}
       <motion.div
