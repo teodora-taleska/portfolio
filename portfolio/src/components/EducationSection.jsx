@@ -24,7 +24,7 @@ export default function EducationSection() {
     {
       degree: "Bachelor's degree, Computer Science",
       school: "UP FAMNIT",
-      duration: "2020 – 2024",
+      duration: "Sep 2020 – Oct 2024",
       type: "bachelor",
       thesis: "language/thesis.pdf",
     },
@@ -34,7 +34,8 @@ export default function EducationSection() {
     <section id="education" className="py-20 px-4 md:px-6 bg-[#121826] text-white relative overflow-hidden">
       <h3 className="text-4xl font-bold mb-16 text-center text-[#D4AF37]">EDUCATION</h3>
 
-      <div className="relative max-w-7xl mx-auto space-y-20">
+      <div className="relative max-w-7xl mx-auto space-y-8">
+        {/* space-y-20 5rem? 16->4rem, 13-> 3rem, 8->2rem...*/}
         {education.map((edu, i) => {
           const isLeft = i % 2 === 0; // zig-zag
 
@@ -48,7 +49,7 @@ export default function EducationSection() {
               className={`flex flex-col md:flex-row items-center md:items-start gap-6 ${isLeft ? "md:flex-row" : "md:flex-row-reverse"}`}
             >
               {/* Card */}
-              <div className="bg-[#1C2541] p-6 md:p-8 rounded-2xl shadow-2xl relative md:w-3/5 flex flex-col justify-center">
+              <div className="bg-[#1C2541] p-6 md:p-6 rounded-2xl shadow-2xl relative md:w-3/5 flex flex-col justify-center">
                 <h4 className="text-xl font-bold">{edu.degree}</h4>
                 <p className="text-white/80 mt-1">{edu.school}</p>
                 <p className="text-white/70 mt-1">{edu.duration}</p>
