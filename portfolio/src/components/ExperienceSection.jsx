@@ -23,8 +23,9 @@ export default function ExperienceSection() {
     <section
       ref={sectionRef}
       id="experience"
-      className="flex gap-12 my-32 py-20 px-10 bg-[#1C2541] text-white"
+      className="flex gap-12 py-20 px-10 bg-[#1C2541] text-white"
     >
+      {/* my-32: margin top and margin bottom 8 rem each; py-> top bottom, px; padding left right...*/}
       {/* Left side: Experience text */}
       <div className="flex-1">
         <h3 className="text-4xl font-bold mb-10 text-[#D4AF37]">EXPERIENCE</h3>
@@ -47,8 +48,10 @@ export default function ExperienceSection() {
       </div>
 
       {/* Right side: Code → App animation */}
-      <div className="flex-1 flex justify-center relative">
-        <CodeToAppAnimation scrollTarget={sectionRef} />
+      <div className="flex-1 relative">
+        <div className="sticky top-30 flex justify-center h-[300px]">
+          <CodeToAppAnimation scrollTarget={sectionRef}/>
+        </div>
       </div>
     </section>
   );
