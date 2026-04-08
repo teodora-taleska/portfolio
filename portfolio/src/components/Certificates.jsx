@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 const certificates = [
   { img: "/certificates/python_lib.png" },
+  { img: "/certificates/soft_skills.jpeg" },
   { img: "/certificates/advanced_python.jpeg" },
   { img: "/certificates/digital_marketing.png" },
   { img: "/certificates/stat3.jpeg"},
