@@ -11,7 +11,7 @@ export default function EducationSection() {
       duration: "Oct 2024 – Oct 2026",
       type: "master",
       languages: [
-        "language/slovene.pdf",
+        "/language/slovene.pdf",
       ],
     },
     {
@@ -19,14 +19,14 @@ export default function EducationSection() {
       school: "KU Leuven",
       duration: "Sep 2025 – Jan 2026",
       type: "master",
-      languages: ["language/dutch.pdf"],
+      languages: ["/language/dutch.pdf"],
     },
     {
       degree: "Bachelor's degree, Computer Science",
       school: "UP FAMNIT",
       duration: "Sep 2020 – Oct 2024",
       type: "bachelor",
-      thesis: "language/thesis.pdf",
+      thesis: "/language/thesis.pdf",
     },
   ];
 
