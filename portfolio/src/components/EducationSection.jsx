@@ -68,7 +68,7 @@ export default function EducationSection() {
                         onClick={() => setModalFile(lang)}
                       >
                         <img
-                          src="icons/language.png"
+                          src="/icons/language.png"
                           alt="Language Certificate"
                           className="w-6 h-6"
                         />

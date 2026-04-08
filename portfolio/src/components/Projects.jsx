@@ -9,6 +9,7 @@ export default function Projects() {
   const [projects, setProjects] = useState(() => {
     const stored = localStorage.getItem("projectsState");
     if (stored) return JSON.parse(stored);
+
     return initialProjects.map((p) => ({
       ...p,
       clicks: 0,
@@ -26,13 +27,13 @@ export default function Projects() {
     (page + 1) * ITEMS_PER_PAGE
   );
 
-  // Persist state to localStorage whenever it changes
+  // Persist state
   useEffect(() => {
     localStorage.setItem("projectsState", JSON.stringify(projects));
   }, [projects]);
 
-  // CLICK TRACKING (per project)
-  const handleGithubClick = (id) => {
+  // ✅ unified click tracking
+  const handleLinkClick = (id) => {
     setProjects((prev) =>
       prev.map((p) =>
         p.id === id ? { ...p, clicks: p.clicks + 1 } : p
@@ -40,7 +41,7 @@ export default function Projects() {
     );
   };
 
-  // LIKE / DISLIKE TOGGLE LOGIC
+  // LIKE / DISLIKE
   const handleReaction = (id, type) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -48,15 +49,12 @@ export default function Projects() {
 
         let { likes, dislikes, userReaction } = p;
 
-        // remove existing reaction
         if (userReaction === type) {
           if (type === "like") likes--;
           if (type === "dislike") dislikes--;
-
           return { ...p, likes, dislikes, userReaction: null };
         }
 
-        // switch reaction
         if (userReaction === "like") likes--;
         if (userReaction === "dislike") dislikes--;
 
@@ -99,11 +97,12 @@ export default function Projects() {
                   className="p-6 bg-[#1C2541] rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
                   whileHover={{ scale: 1.03, y: -2 }}
                 >
-                  {/* TITLE + GITHUB */}
+                  {/* TITLE + LINKS */}
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xl font-semibold text-[#5BC0BE] flex items-center gap-2">
+                    <h4 className="text-xl font-semibold text-[#5BC0BE] flex items-center gap-3">
                       {p.title}
 
+                      {/* GITHUB */}
                       {p.github && (
                         <a
                           href={p.github}
@@ -111,7 +110,7 @@ export default function Projects() {
                           rel="noopener noreferrer"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleGithubClick(p.id);
+                            handleLinkClick(p.id);
                           }}
                           className="relative group flex items-center"
                         >
@@ -120,17 +119,54 @@ export default function Projects() {
                             alt="GitHub"
                             className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 filter brightness-0 invert"
                           />
+                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                            GitHub
+                          </span>
+                        </a>
+                      )}
 
-                          <span className="
-                            absolute left-1/2 -translate-x-1/2 top-[-28px]
-                            text-xs bg-black/80 backdrop-blur px-2 py-1 rounded
-                            text-white whitespace-nowrap
-                            opacity-0 translate-y-1
-                            group-hover:opacity-100 group-hover:translate-y-0
-                            transition-all duration-300
-                            pointer-events-none
-                          ">
-                            View on GitHub
+                      {/* YOUTUBE */}
+                      {p.youtube && (
+                        <a
+                          href={p.youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLinkClick(p.id);
+                          }}
+                          className="relative group flex items-center"
+                        >
+                          <img
+                            src="/icons/youtube.png"
+                            alt="YouTube"
+                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 filter brightness-0 invert"
+                          />
+                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                            Demo
+                          </span>
+                        </a>
+                      )}
+
+                      {/* GENERIC LINK */}
+                      {p.link && (
+                        <a
+                          href={p.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLinkClick(p.id);
+                          }}
+                          className="relative group flex items-center"
+                        >
+                          <img
+                            src="/icons/link.png"
+                            alt="Live"
+                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 filter brightness-0 invert"
+                          />
+                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                            Live
                           </span>
                         </a>
                       )}
@@ -155,7 +191,6 @@ export default function Projects() {
                   {/* INTERACTIONS */}
                   <div className="mt-4 flex gap-4 items-center text-white/60">
 
-                    {/* LIKE */}
                     <button
                       onClick={() => handleReaction(p.id, "like")}
                       className={`flex items-center gap-1 transition ${
@@ -171,7 +206,6 @@ export default function Projects() {
                       <span className="text-xs">{p.likes}</span>
                     </button>
 
-                    {/* DISLIKE */}
                     <button
                       onClick={() => handleReaction(p.id, "dislike")}
                       className={`flex items-center gap-1 transition ${
@@ -186,7 +220,6 @@ export default function Projects() {
                       />
                     </button>
 
-                    {/* Clicks shown (optional) */}
                     <span className="ml-auto text-xs opacity-50">
                       clicks: {p.clicks}
                     </span>
