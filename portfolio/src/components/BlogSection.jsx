@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { blogs as blogData } from "../../public/data/blogs.js"; // import your blogs
 
 function getReadingTime(text) {
@@ -89,7 +90,7 @@ export default function BlogSection() {
               {visibleBlogs.map((blog) => (
                 <motion.div
                   key={blog.id}
-                  className="group p-6 bg-[#1C2541] rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
+                  className="group p-6 bg-[#1C2541] rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
                   whileHover={{ scale: 1.03, y: -2 }}
                 >
                   {/* CLICKABLE AREA */}
@@ -133,14 +134,39 @@ export default function BlogSection() {
                   </div>
 
                   {/* INTERACTIONS */}
-                  <div className="mt-4 flex items-center gap-4 text-sm text-white/70">
-                    <button onClick={() => handleReaction(blog.id, "like")}>
-                      👍 {blog.likes}
+                  <div className="mt-4 flex gap-4 items-center text-white/60">
+                    <button
+                      onClick={() => handleReaction(blog.id, "like")}
+                      className={`flex items-center gap-1 transition ${
+                        blog.userReaction === "like"
+                          ? "text-green-400"
+                          : "hover:text-green-400"
+                      }`}
+                    >
+                      <ThumbsUp
+                        size={16}
+                        fill={blog.userReaction === "like" ? "currentColor" : "none"}
+                      />
+                      <span className="text-xs">{blog.likes}</span>
                     </button>
-                    <button onClick={() => handleReaction(blog.id, "dislike")}>
-                      👎 {blog.dislikes}
+
+                    <button
+                      onClick={() => handleReaction(blog.id, "dislike")}
+                      className={`flex items-center gap-1 transition ${
+                        blog.userReaction === "dislike"
+                          ? "text-red-400"
+                          : "hover:text-red-400"
+                      }`}
+                    >
+                      <ThumbsDown
+                        size={16}
+                        fill={blog.userReaction === "dislike" ? "currentColor" : "none"}
+                      />
                     </button>
-                    <span>👁 {blog.clicks}</span>
+
+                    <span className="ml-auto text-xs opacity-50">
+                      clicks: {blog.clicks}
+                    </span>
                   </div>
                 </motion.div>
               ))}
