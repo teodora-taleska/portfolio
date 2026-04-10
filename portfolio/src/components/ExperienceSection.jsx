@@ -1,21 +1,8 @@
-import {useEffect, useRef, useState} from "react";
+import { useRef } from "react";
 import CodeToAppAnimation from "./CodeToAppAnimation.jsx";
 
 export default function ExperienceSection() {
   const sectionRef = useRef(null);
-  const [animationDone, setAnimationDone] = useState(false);
-
-  // Lock scroll while animation is running
-  useEffect(() => {
-    if (!animationDone) {
-      document.body.style.overflow = "hidden"; // freeze scroll
-    } else {
-      document.body.style.overflow = ""; // restore scroll
-    }
-    return () => {
-      document.body.style.overflow = ""; // cleanup
-    };
-  }, [animationDone]);
 
   const experiences = [
     {
@@ -62,10 +49,7 @@ export default function ExperienceSection() {
       {/* Right side: Code → App animation */}
       <div className="flex-1 relative">
         <div className="sticky top-30 flex justify-center h-[300px]">
-          <CodeToAppAnimation
-            scrollTarget={sectionRef}
-            onAnimationComplete={() => setAnimationDone(true)}
-          />
+          <CodeToAppAnimation />
         </div>
       </div>
     </section>
