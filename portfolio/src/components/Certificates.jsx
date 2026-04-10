@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const certificates = [
+  { img: "/certificates/claude_code.jpg" },
   { img: "/certificates/python_lib.png" },
   { img: "/certificates/soft_skills.jpeg" },
   { img: "/certificates/advanced_python.jpeg" },
