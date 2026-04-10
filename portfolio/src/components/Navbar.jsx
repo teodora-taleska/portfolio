@@ -1,30 +1,32 @@
+import { Link, useLocation } from "react-router-dom";
+
 export default function Navbar() {
+  const { pathname } = useLocation();
+  const isHome = pathname === "/";
+
+  const anchorLink = (hash, label) =>
+    isHome ? (
+      <a href={hash} className="hover:text-[#D4AF37] transition">{label}</a>
+    ) : (
+      <Link to={`/${hash}`} className="hover:text-[#D4AF37] transition">{label}</Link>
+    );
+
   return (
-      <nav className="fixed top-0 w-full flex justify-center gap-8 py-4
+    <nav className="fixed top-0 w-full flex justify-center gap-8 py-4
                     bg-[#0B132B]/30 backdrop-blur-md
                     border-b border-white/10
                     z-50 text-sm">
 
-          <a href="#projects" className="hover:text-[#D4AF37] transition">
-              Projects
-          </a>
+      {anchorLink("#projects", "Projects")}
+      {anchorLink("#experience", "Experience")}
 
-          <a href="#experience" className="hover:text-[#D4AF37] transition">
-              Experience
-          </a>
+      <Link to="/blogs" className="hover:text-[#D4AF37] transition">
+        Blogs
+      </Link>
 
-          <a href="#blogs" className="hover:text-[#D4AF37] transition">
-              Blogs
-          </a>
+      {anchorLink("#certificates", "Certificates")}
+      {anchorLink("#contact", "Contact")}
 
-          <a href="#certificates" className="hover:text-[#D4AF37] transition">
-              Certificates
-          </a>
-
-          <a href="#contact" className="hover:text-[#D4AF37] transition">
-              Contact
-          </a>
-
-      </nav>
+    </nav>
   );
 }
