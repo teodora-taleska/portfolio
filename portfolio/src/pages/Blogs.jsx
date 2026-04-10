@@ -178,40 +178,56 @@ export default function Blogs() {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link to={`/blogs/${blog.id}`} className="block group mb-5">
-                  <div className="bg-[#1C2541]/50 border border-[#D4AF37]/10 rounded-2xl p-6 hover:border-[#D4AF37]/40 hover:bg-[#1C2541]/80 transition-all duration-300">
-                    <div className="flex items-start justify-between gap-4">
-                      <h2 className="text-xl font-semibold text-white group-hover:text-[#D4AF37] transition-colors">
-                        {blog.title}
-                      </h2>
-                      <span className="shrink-0 text-xs text-gray-500 mt-1">
-                        {formatDate(blog.date)}
-                      </span>
-                    </div>
+                  <div className="bg-[#1C2541]/50 border border-[#D4AF37]/10 rounded-2xl overflow-hidden hover:border-[#D4AF37]/40 hover:bg-[#1C2541]/80 transition-all duration-300 flex flex-col sm:flex-row">
 
-                    <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-                      {blog.body}
-                    </p>
+                    {/* Cover image */}
+                    {blog.image && (
+                      <div className="sm:w-48 sm:shrink-0 h-40 sm:h-auto overflow-hidden bg-[#0B132B]/40">
+                        <img
+                          src={blog.image}
+                          alt={blog.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    )}
 
-                    <div className="flex items-center gap-3 mt-4 flex-wrap">
-                      {blog.keywords.map((kw) => (
-                        <span
-                          key={kw}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setActiveKeyword(activeKeyword === kw ? null : kw);
-                          }}
-                          className={`px-2.5 py-0.5 rounded-full text-xs border cursor-pointer transition-colors ${
-                            activeKeyword === kw
-                              ? "bg-[#5BC0BE] text-[#0B132B] border-[#5BC0BE]"
-                              : "border-[#5BC0BE]/30 text-[#5BC0BE] hover:border-[#5BC0BE]"
-                          }`}
-                        >
-                          {kw}
+                    {/* Text */}
+                    <div className="p-6 flex flex-col justify-between flex-1">
+                      <div>
+                        <div className="flex items-start justify-between gap-4">
+                          <h2 className="text-xl font-semibold text-white group-hover:text-[#D4AF37] transition-colors">
+                            {blog.title}
+                          </h2>
+                          <span className="shrink-0 text-xs text-gray-500 mt-1">
+                            {formatDate(blog.date)}
+                          </span>
+                        </div>
+                        <p className="text-gray-400 text-sm mt-2 line-clamp-2">
+                          {blog.body}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3 mt-4 flex-wrap">
+                        {blog.keywords.map((kw) => (
+                          <span
+                            key={kw}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setActiveKeyword(activeKeyword === kw ? null : kw);
+                            }}
+                            className={`px-2.5 py-0.5 rounded-full text-xs border cursor-pointer transition-colors ${
+                              activeKeyword === kw
+                                ? "bg-[#5BC0BE] text-[#0B132B] border-[#5BC0BE]"
+                                : "border-[#5BC0BE]/30 text-[#5BC0BE] hover:border-[#5BC0BE]"
+                            }`}
+                          >
+                            {kw}
+                          </span>
+                        ))}
+                        <span className="ml-auto text-xs text-gray-500">
+                          {readingTime(blog.body)} min read
                         </span>
-                      ))}
-                      <span className="ml-auto text-xs text-gray-500">
-                        {readingTime(blog.body)} min read
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </Link>

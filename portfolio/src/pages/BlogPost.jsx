@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import Navbar from "../components/Navbar";
 import { blogs } from "../../public/data/blogs.js";
+
+const SERVICE_ID = import.meta.env.VITE_EMAIL_SERVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
+const PUBLIC_KEY = import.meta.env.VITE_EMAIL_PUBLIC_KEY;
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -17,16 +23,120 @@ function readingTime(body) {
   return Math.max(1, Math.round(words / 200));
 }
 
+function loadBlogState(id) {
+  try {
+    const stored = localStorage.getItem("blogsState");
+    if (!stored) return { likes: 0, dislikes: 0, userReaction: null };
+    const all = JSON.parse(stored);
+    const entry = all.find((b) => b.id === id);
+    return entry
+      ? { likes: entry.likes, dislikes: entry.dislikes, userReaction: entry.userReaction }
+      : { likes: 0, dislikes: 0, userReaction: null };
+  } catch {
+    return { likes: 0, dislikes: 0, userReaction: null };
+  }
+}
+
+function saveBlogState(id, patch) {
+  try {
+    const stored = localStorage.getItem("blogsState");
+    let all = stored ? JSON.parse(stored) : blogs.map((b) => ({ ...b, likes: 0, dislikes: 0, userReaction: null, clicks: 0 }));
+    const idx = all.findIndex((b) => b.id === id);
+    if (idx !== -1) all[idx] = { ...all[idx], ...patch };
+    else all.push({ id, likes: 0, dislikes: 0, userReaction: null, clicks: 0, ...patch });
+    localStorage.setItem("blogsState", JSON.stringify(all));
+  } catch {}
+}
+
+const emptyFeedback = { name: "", email: "", comment: "" };
+
 export default function BlogPost() {
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [notFound, setNotFound] = useState(false);
 
+  const [reaction, setReaction] = useState({ likes: 0, dislikes: 0, userReaction: null });
+  const [feedback, setFeedback] = useState(emptyFeedback);
+  const [feedbackErrors, setFeedbackErrors] = useState({});
+  const [feedbackStatus, setFeedbackStatus] = useState(null);
+
   useEffect(() => {
     const found = blogs.find((b) => b.id === slug);
-    if (found) setBlog(found);
-    else setNotFound(true);
+    if (found) {
+      setBlog(found);
+      setReaction(loadBlogState(found.id));
+    } else {
+      setNotFound(true);
+    }
   }, [slug]);
+
+  const handleReaction = (type) => {
+    setReaction((prev) => {
+      let { likes, dislikes, userReaction } = prev;
+      if (userReaction === type) {
+        if (type === "like") likes--;
+        if (type === "dislike") dislikes--;
+        const next = { likes, dislikes, userReaction: null };
+        saveBlogState(slug, next);
+        return next;
+      }
+      if (userReaction === "like") likes--;
+      if (userReaction === "dislike") dislikes--;
+      if (type === "like") likes++;
+      if (type === "dislike") dislikes++;
+      const next = { likes, dislikes, userReaction: type };
+      saveBlogState(slug, next);
+      return next;
+    });
+  };
+
+  const handleFeedbackChange = (e) => {
+    const { name, value } = e.target;
+    setFeedback((prev) => ({ ...prev, [name]: value }));
+    if (feedbackErrors[name]) setFeedbackErrors((prev) => ({ ...prev, [name]: false }));
+  };
+
+  const validateFeedback = () => {
+    const errors = {
+      name: !feedback.name.trim(),
+      email: !feedback.email.trim(),
+      comment: !feedback.comment.trim(),
+    };
+    setFeedbackErrors(errors);
+    return !Object.values(errors).some(Boolean);
+  };
+
+  const handleFeedbackSubmit = (e) => {
+    e.preventDefault();
+    if (!validateFeedback()) return;
+    setFeedbackStatus("sending");
+
+    emailjs
+      .send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          name: feedback.name,
+          to_email: feedback.email,
+          title: `Blog feedback: ${blog.title}`,
+          message: feedback.comment,
+          time: new Date().toLocaleString(),
+        },
+        PUBLIC_KEY
+      )
+      .then(() => {
+        setFeedbackStatus("success");
+        setFeedback(emptyFeedback);
+      })
+      .catch(() => setFeedbackStatus("error"));
+  };
+
+  const fieldClass = (name) =>
+    `w-full p-3 rounded-lg bg-[#0B132B]/50 border text-white text-sm focus:outline-none focus:ring-2 transition-colors ${
+      feedbackErrors[name]
+        ? "border-red-500 focus:ring-red-500"
+        : "border-[#D4AF37]/20 focus:ring-[#D4AF37]/50"
+    }`;
 
   if (notFound) {
     return (
@@ -70,6 +180,18 @@ export default function BlogPost() {
           </Link>
         </motion.div>
 
+        {/* Cover image */}
+        {blog.image && (
+          <motion.div
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl overflow-hidden mb-10 h-64 md:h-80"
+          >
+            <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
+          </motion.div>
+        )}
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -109,12 +231,114 @@ export default function BlogPost() {
           {blog.body}
         </motion.div>
 
+        {/* Likes / Dislikes */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="mt-14 pt-8 border-t border-white/10 flex items-center gap-6"
+        >
+          <span className="text-gray-400 text-sm">Was this helpful?</span>
+
+          <button
+            onClick={() => handleReaction("like")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
+              reaction.userReaction === "like"
+                ? "border-green-400 text-green-400 bg-green-400/10"
+                : "border-white/10 text-gray-400 hover:border-green-400 hover:text-green-400"
+            }`}
+          >
+            <ThumbsUp size={16} fill={reaction.userReaction === "like" ? "currentColor" : "none"} />
+            <span className="text-sm">{reaction.likes}</span>
+          </button>
+
+          <button
+            onClick={() => handleReaction("dislike")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
+              reaction.userReaction === "dislike"
+                ? "border-red-400 text-red-400 bg-red-400/10"
+                : "border-white/10 text-gray-400 hover:border-red-400 hover:text-red-400"
+            }`}
+          >
+            <ThumbsDown size={16} fill={reaction.userReaction === "dislike" ? "currentColor" : "none"} />
+            <span className="text-sm">{reaction.dislikes}</span>
+          </button>
+        </motion.div>
+
+        {/* Feedback form */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-12"
+        >
+          <h3 className="text-xl font-semibold text-[#D4AF37] mb-1">Leave a comment</h3>
+          <p className="text-gray-500 text-sm mb-6">Your feedback comes directly to me — I read every message.</p>
+
+          <form onSubmit={handleFeedbackSubmit} noValidate className="flex flex-col gap-4">
+            <div className="flex gap-3">
+              <div className="flex flex-col gap-1 flex-1">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your name"
+                  value={feedback.name}
+                  onChange={handleFeedbackChange}
+                  className={fieldClass("name")}
+                />
+                {feedbackErrors.name && (
+                  <span className="text-red-500 text-xs px-1">Name is required</span>
+                )}
+              </div>
+              <div className="flex flex-col gap-1 flex-1">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Your email"
+                  value={feedback.email}
+                  onChange={handleFeedbackChange}
+                  className={fieldClass("email")}
+                />
+                {feedbackErrors.email && (
+                  <span className="text-red-500 text-xs px-1">Email is required</span>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <textarea
+                name="comment"
+                placeholder="Share your thoughts…"
+                value={feedback.comment}
+                onChange={handleFeedbackChange}
+                rows={5}
+                className={fieldClass("comment")}
+              />
+              {feedbackErrors.comment && (
+                <span className="text-red-500 text-xs px-1">Comment is required</span>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={feedbackStatus === "sending"}
+              className="self-start bg-[#D4AF37] text-[#0B132B] font-bold px-6 py-2.5 rounded-lg hover:scale-105 transition-transform disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+            >
+              {feedbackStatus === "sending" ? "Sending…" : "Send"}
+            </button>
+
+            {feedbackStatus === "success" && (
+              <p className="text-green-400 text-sm">Thanks for your feedback!</p>
+            )}
+            {feedbackStatus === "error" && (
+              <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
+            )}
+          </form>
+        </motion.div>
+
         {/* Footer nav */}
         <div className="mt-16 pt-8 border-t border-white/10 flex justify-center">
-          <Link
-            to="/blogs"
-            className="inline-flex items-center gap-2 text-[#D4AF37] hover:underline text-sm"
-          >
+          <Link to="/blogs" className="inline-flex items-center gap-2 text-[#D4AF37] hover:underline text-sm">
             ← All Blogs
           </Link>
         </div>
