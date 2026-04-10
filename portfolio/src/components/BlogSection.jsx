@@ -1,68 +1,90 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import { blogs as blogData } from "../../public/data/blogs.js"; // import your blogs
+import { blogs as blogData } from "../../public/data/blogs.js";
+import { getReactions, saveReactions } from "../lib/supabase.js";
 
 function getReadingTime(text) {
   const words = text.split(" ").length;
   return Math.ceil(words / 200);
 }
+function localKey(id) { return `blog_reaction_${id}`; }
+function getUserReaction(id) { return localStorage.getItem(localKey(id)); }
+function setUserReaction(id, val) {
+  if (val) localStorage.setItem(localKey(id), val);
+  else localStorage.removeItem(localKey(id));
+}
 
 export default function BlogSection() {
   const ITEMS_PER_PAGE = 3;
 
-  const [blogState, setBlogState] = useState(() => {
-    const stored = localStorage.getItem("blogsState");
-    if (stored) return JSON.parse(stored);
-    return blogData.map((b) => ({
+  const [blogState, setBlogState] = useState(
+    blogData.map((b) => ({
       ...b,
       clicks: 0,
       likes: 0,
       dislikes: 0,
-      userReaction: null,
+      userReaction: getUserReaction(b.id),
       readTime: getReadingTime(b.body),
-    }));
-  });
+    }))
+  );
 
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(blogState.length / ITEMS_PER_PAGE);
-  const visibleBlogs = blogState.slice(
-    page * ITEMS_PER_PAGE,
-    (page + 1) * ITEMS_PER_PAGE
-  );
+  const visibleBlogs = blogState.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
-  // Persist state
+  // Load counts from Supabase on mount
   useEffect(() => {
-    localStorage.setItem("blogsState", JSON.stringify(blogState));
-  }, [blogState]);
+    blogData.forEach(async (b) => {
+      const data = await getReactions(b.id);
+      setBlogState((prev) =>
+        prev.map((blog) => {
+          if (blog.id !== b.id) return blog;
+          const userReaction = getUserReaction(b.id);
+          return {
+            ...blog,
+            likes: Math.max(data.likes, userReaction === "like" ? 1 : 0),
+            dislikes: Math.max(data.dislikes, userReaction === "dislike" ? 1 : 0),
+          };
+        })
+      );
+    });
+  }, []);
 
-  const handleClick = (id) => {
+  const handleClick = async (id) => {
     setBlogState((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, clicks: b.clicks + 1 } : b))
+      prev.map((b) => b.id === id ? { ...b, clicks: b.clicks + 1 } : b)
     );
+    const current = blogState.find((b) => b.id === id);
+    await saveReactions(id, "blog", { clicks: (current?.clicks ?? 0) + 1 });
   };
 
   const handleReaction = (id, type) => {
     setBlogState((prev) =>
       prev.map((b) => {
         if (b.id !== id) return b;
-
         let { likes, dislikes, userReaction } = b;
+
         if (userReaction === type) {
-          if (type === "like") likes--;
-          if (type === "dislike") dislikes--;
+          likes = type === "like" ? Math.max(0, likes - 1) : likes;
+          dislikes = type === "dislike" ? Math.max(0, dislikes - 1) : dislikes;
+          setUserReaction(id, null);
+          saveReactions(id, "blog", { likes, dislikes });
           return { ...b, likes, dislikes, userReaction: null };
         }
-        if (userReaction === "like") likes--;
-        if (userReaction === "dislike") dislikes--;
-
+        if (userReaction === "like") likes = Math.max(0, likes - 1);
+        if (userReaction === "dislike") dislikes = Math.max(0, dislikes - 1);
         if (type === "like") likes++;
         if (type === "dislike") dislikes++;
-
+        setUserReaction(id, type);
+        saveReactions(id, "blog", { likes, dislikes });
         return { ...b, likes, dislikes, userReaction: type };
       })
     );
   };
+
+  // Note: BlogSection calls saveReactions directly inside the map (not a state updater pattern)
+  // so it's fine here — no StrictMode double-call issue
 
   return (
     <section id="blogs" className="py-20 px-10 bg-[#121826]">

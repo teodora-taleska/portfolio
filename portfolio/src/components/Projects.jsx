@@ -2,65 +2,78 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { projects as initialProjects } from "../../public/data/projects.js";
+import { getReactions, saveReactions } from "../lib/supabase.js";
+
+function localKey(id) { return `project_reaction_${id}`; }
+function getUserReaction(id) { return localStorage.getItem(localKey(id)); }
+function setUserReaction(id, val) {
+  if (val) localStorage.setItem(localKey(id), val);
+  else localStorage.removeItem(localKey(id));
+}
 
 export default function Projects() {
   const ITEMS_PER_PAGE = 3;
 
-  const [projects, setProjects] = useState(() => {
-    const stored = localStorage.getItem("projectsState");
-    if (stored) return JSON.parse(stored);
-
-    return initialProjects.map((p) => ({
+  const [projects, setProjects] = useState(
+    initialProjects.map((p) => ({
       ...p,
       clicks: 0,
       likes: 0,
       dislikes: 0,
-      userReaction: null,
-    }));
-  });
+      userReaction: getUserReaction(p.id),
+    }))
+  );
 
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
+  const visibleProjects = projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
-  const visibleProjects = projects.slice(
-    page * ITEMS_PER_PAGE,
-    (page + 1) * ITEMS_PER_PAGE
-  );
-
-  // Persist state
+  // Load counts from Supabase on mount
   useEffect(() => {
-    localStorage.setItem("projectsState", JSON.stringify(projects));
-  }, [projects]);
+    initialProjects.forEach(async (p) => {
+      const data = await getReactions(p.id);
+      setProjects((prev) =>
+        prev.map((proj) => {
+          if (proj.id !== p.id) return proj;
+          const userReaction = getUserReaction(p.id);
+          return {
+            ...proj,
+            likes: Math.max(data.likes, userReaction === "like" ? 1 : 0),
+            dislikes: Math.max(data.dislikes, userReaction === "dislike" ? 1 : 0),
+            clicks: data.clicks,
+          };
+        })
+      );
+    });
+  }, []);
 
-  // ✅ unified click tracking
-  const handleLinkClick = (id) => {
+  const handleLinkClick = async (id) => {
     setProjects((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, clicks: p.clicks + 1 } : p
-      )
+      prev.map((p) => p.id === id ? { ...p, clicks: p.clicks + 1 } : p)
     );
+    const current = projects.find((p) => p.id === id);
+    await saveReactions(id, "project", { clicks: (current?.clicks ?? 0) + 1 });
   };
 
-  // LIKE / DISLIKE
-  const handleReaction = (id, type) => {
+  const handleReaction = async (id, type) => {
     setProjects((prev) =>
       prev.map((p) => {
         if (p.id !== id) return p;
-
         let { likes, dislikes, userReaction } = p;
 
         if (userReaction === type) {
-          if (type === "like") likes--;
-          if (type === "dislike") dislikes--;
+          likes = type === "like" ? Math.max(0, likes - 1) : likes;
+          dislikes = type === "dislike" ? Math.max(0, dislikes - 1) : dislikes;
+          setUserReaction(id, null);
+          saveReactions(id, "project", { likes, dislikes });
           return { ...p, likes, dislikes, userReaction: null };
         }
-
-        if (userReaction === "like") likes--;
-        if (userReaction === "dislike") dislikes--;
-
+        if (userReaction === "like") likes = Math.max(0, likes - 1);
+        if (userReaction === "dislike") dislikes = Math.max(0, dislikes - 1);
         if (type === "like") likes++;
         if (type === "dislike") dislikes++;
-
+        setUserReaction(id, type);
+        saveReactions(id, "project", { likes, dislikes });
         return { ...p, likes, dislikes, userReaction: type };
       })
     );

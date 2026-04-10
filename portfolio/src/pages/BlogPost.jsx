@@ -5,6 +5,7 @@ import { ThumbsUp, ThumbsDown } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import Navbar from "../components/Navbar";
 import { blogs } from "../../public/data/blogs.js";
+import { getReactions, saveReactions } from "../lib/supabase.js";
 
 const SERVICE_ID = import.meta.env.VITE_EMAIL_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
@@ -23,29 +24,11 @@ function readingTime(body) {
   return Math.max(1, Math.round(words / 200));
 }
 
-function loadBlogState(id) {
-  try {
-    const stored = localStorage.getItem("blogsState");
-    if (!stored) return { likes: 0, dislikes: 0, userReaction: null };
-    const all = JSON.parse(stored);
-    const entry = all.find((b) => b.id === id);
-    return entry
-      ? { likes: entry.likes, dislikes: entry.dislikes, userReaction: entry.userReaction }
-      : { likes: 0, dislikes: 0, userReaction: null };
-  } catch {
-    return { likes: 0, dislikes: 0, userReaction: null };
-  }
-}
-
-function saveBlogState(id, patch) {
-  try {
-    const stored = localStorage.getItem("blogsState");
-    let all = stored ? JSON.parse(stored) : blogs.map((b) => ({ ...b, likes: 0, dislikes: 0, userReaction: null, clicks: 0 }));
-    const idx = all.findIndex((b) => b.id === id);
-    if (idx !== -1) all[idx] = { ...all[idx], ...patch };
-    else all.push({ id, likes: 0, dislikes: 0, userReaction: null, clicks: 0, ...patch });
-    localStorage.setItem("blogsState", JSON.stringify(all));
-  } catch {}
+function localKey(id) { return `blog_reaction_${id}`; }
+function getUserReaction(id) { return localStorage.getItem(localKey(id)); }
+function setUserReaction(id, val) {
+  if (val) localStorage.setItem(localKey(id), val);
+  else localStorage.removeItem(localKey(id));
 }
 
 const emptyFeedback = { name: "", email: "", comment: "" };
@@ -55,7 +38,7 @@ export default function BlogPost() {
   const [blog, setBlog] = useState(null);
   const [notFound, setNotFound] = useState(false);
 
-  const [reaction, setReaction] = useState({ likes: 0, dislikes: 0, userReaction: null });
+  const [reaction, setReaction] = useState({ likes: 0, dislikes: 0, userReaction: getUserReaction(slug) });
   const [feedback, setFeedback] = useState(emptyFeedback);
   const [feedbackErrors, setFeedbackErrors] = useState({});
   const [feedbackStatus, setFeedbackStatus] = useState(null);
@@ -64,7 +47,14 @@ export default function BlogPost() {
     const found = blogs.find((b) => b.id === slug);
     if (found) {
       setBlog(found);
-      setReaction(loadBlogState(found.id));
+      getReactions(slug).then((data) => {
+        const userReaction = getUserReaction(slug);
+        setReaction({
+          likes: Math.max(data.likes, userReaction === "like" ? 1 : 0),
+          dislikes: Math.max(data.dislikes, userReaction === "dislike" ? 1 : 0),
+          userReaction,
+        });
+      });
     } else {
       setNotFound(true);
     }
@@ -74,21 +64,25 @@ export default function BlogPost() {
     setReaction((prev) => {
       let { likes, dislikes, userReaction } = prev;
       if (userReaction === type) {
-        if (type === "like") likes--;
-        if (type === "dislike") dislikes--;
-        const next = { likes, dislikes, userReaction: null };
-        saveBlogState(slug, next);
-        return next;
+        likes = type === "like" ? Math.max(0, likes - 1) : likes;
+        dislikes = type === "dislike" ? Math.max(0, dislikes - 1) : dislikes;
+        setUserReaction(slug, null);
+        return { likes, dislikes, userReaction: null };
       }
-      if (userReaction === "like") likes--;
-      if (userReaction === "dislike") dislikes--;
+      if (userReaction === "like") likes = Math.max(0, likes - 1);
+      if (userReaction === "dislike") dislikes = Math.max(0, dislikes - 1);
       if (type === "like") likes++;
       if (type === "dislike") dislikes++;
-      const next = { likes, dislikes, userReaction: type };
-      saveBlogState(slug, next);
-      return next;
+      setUserReaction(slug, type);
+      return { likes, dislikes, userReaction: type };
     });
   };
+
+  // Sync reaction changes to Supabase outside the state updater
+  useEffect(() => {
+    if (!blog) return;
+    saveReactions(slug, "blog", { likes: reaction.likes, dislikes: reaction.dislikes });
+  }, [reaction.likes, reaction.dislikes]);
 
   const handleFeedbackChange = (e) => {
     const { name, value } = e.target;
