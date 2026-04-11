@@ -271,7 +271,7 @@ export default function BlogPost() {
           className="mt-12"
         >
           <h3 className="text-xl font-semibold text-[#D4AF37] mb-1">Leave a comment</h3>
-          <p className="text-gray-500 text-sm mb-6">Your feedback comes directly to me — I read every message.</p>
+          <p className="text-gray-500 text-sm mb-6">Your feedback comes directly to me. I read every message😊.</p>
 
           <form onSubmit={handleFeedbackSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row gap-3">
