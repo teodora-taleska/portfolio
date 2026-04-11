@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import emailjs from "@emailjs/browser";
 import Navbar from "../components/Navbar";
 import { blogs } from "../../public/data/blogs.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
 
-const SERVICE_ID = import.meta.env.VITE_EMAIL_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAIL_PUBLIC_KEY;
+const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -100,29 +97,36 @@ export default function BlogPost() {
     return !Object.values(errors).some(Boolean);
   };
 
-  const handleFeedbackSubmit = (e) => {
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     if (!validateFeedback()) return;
     setFeedbackStatus("sending");
 
-    emailjs
-      .send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        {
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
           name: feedback.name,
-          to_email: feedback.email,
-          title: `Blog feedback: ${blog.title}`,
+          email: feedback.email,
+          subject: `Blog feedback: ${blog.title}`,
           message: feedback.comment,
-          time: new Date().toLocaleString(),
-        },
-        PUBLIC_KEY
-      )
-      .then(() => {
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
         setFeedbackStatus("success");
         setFeedback(emptyFeedback);
-      })
-      .catch(() => setFeedbackStatus("error"));
+      } else {
+        console.error("Web3Forms error:", data);
+        setFeedbackStatus("error");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      setFeedbackStatus("error");
+    }
   };
 
   const fieldClass = (name) =>
@@ -270,7 +274,7 @@ export default function BlogPost() {
           <p className="text-gray-500 text-sm mb-6">Your feedback comes directly to me — I read every message.</p>
 
           <form onSubmit={handleFeedbackSubmit} noValidate className="flex flex-col gap-4">
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex flex-col gap-1 flex-1">
                 <input
                   type="text"
