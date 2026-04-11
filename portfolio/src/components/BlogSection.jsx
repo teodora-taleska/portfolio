@@ -116,7 +116,7 @@ export default function BlogSection() {
         <div className="md:w-1/3">
           <h3 className="text-4xl text-[#FFD166] font-bold mb-4">BLOGS</h3>
           <p className="text-white/80">
-            Short reads on AI, data systems, and concepts I explore while learning and building.
+            Thoughts on AI, data systems, and software. From concepts I'm exploring to honest opinions shaped by real experience building things.
           </p>
         </div>
 
