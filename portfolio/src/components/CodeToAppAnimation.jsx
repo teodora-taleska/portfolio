@@ -64,14 +64,14 @@ export default function CodeToAppAnimation({ onAnimationComplete }) {
       <motion.div
         animate={bgControls}
         initial={{ opacity: 0, scale: 0.9 }}
-        className="absolute w-[500px] h-[300px] bg-[#5BC0BE]/20 rounded-2xl z-10 will-change-transform transform-gpu"
+        className="absolute w-full max-w-[500px] h-[300px] bg-[#5BC0BE]/20 rounded-2xl z-10 will-change-transform transform-gpu"
       />
 
       {/* CODE BLOCK */}
       <motion.div
         animate={codeControls}
         initial={{ opacity: 1, y: 0 }}
-        className="absolute w-64 h-32 bg-[#1C2541] border border-[#D4AF37] rounded-xl shadow-lg p-3 text-white text-xs font-mono flex flex-col justify-around z-30 will-change-transform transform-gpu"
+        className="absolute w-[min(256px,70vw)] h-32 bg-[#1C2541] border border-[#D4AF37] rounded-xl shadow-lg p-3 text-white text-xs font-mono flex flex-col justify-around z-30 will-change-transform transform-gpu"
       >
         <div>import React from "react";</div>
         <div>const App = () =&gt; &lt;View /&gt;;</div>
@@ -82,7 +82,7 @@ export default function CodeToAppAnimation({ onAnimationComplete }) {
       <motion.div
         animate={webControls}
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="absolute w-[450px] h-[280px] rounded-2xl shadow-xl overflow-hidden border border-[#FFD700] bg-[#1C2541]/80 z-20 will-change-transform transform-gpu"
+        className="absolute w-[min(450px,95vw)] h-[min(280px,50vw)] rounded-2xl shadow-xl overflow-hidden border border-[#FFD700] bg-[#1C2541]/80 z-20 will-change-transform transform-gpu"
         style={{ right: "2%" }}
       >
         <img
@@ -96,7 +96,7 @@ export default function CodeToAppAnimation({ onAnimationComplete }) {
       <motion.div
         animate={protoControls}
         initial={{ opacity: 0, x: -150, scale: 0.95 }}
-        className="absolute w-[420px] h-[320px] rounded-2xl shadow-2xl overflow-hidden border border-[#5BC0BE] z-30 will-change-transform transform-gpu"
+        className="absolute w-[min(420px,90vw)] h-[min(320px,55vw)] rounded-2xl shadow-2xl overflow-hidden border border-[#5BC0BE] z-30 will-change-transform transform-gpu"
         style={{ left: "2%" }}
       >
         <img

@@ -34,49 +34,24 @@ export default function Hero() {
         <NeuralBackground open={true} />
 
         {/* Foreground content */}
-        <div className="relative z-10 flex flex-col items-center text-center w-full pt-20 pb-24">
-
-          {/* Keywords row — above the photo */}
-          <div className="flex flex-wrap justify-center gap-2 px-4 mb-4">
-            {[
-              { text: "Data Science",     color: "#5BC0BE" },
-              { text: "AI",               color: "#D4AF37" },
-              { text: "Machine Learning", color: "#D4AF37" },
-              { text: "Analytics",        color: "#FFD700" },
-              { text: "Intelligence",     color: "#5BC0BE" },
-              { text: "Vision",           color: "white"   },
-              { text: "Systems",          color: "white"   },
-              { text: "Optimization",     color: "#FFD700" },
-            ].map((w, i) => (
-              <span
-                key={i}
-                className="rounded-full border border-white/40 px-3 py-1 bg-white/5 backdrop-blur-sm text-xs font-medium"
-                style={{ color: w.color }}
-              >
-                {w.text}
-              </span>
-            ))}
-          </div>
-
-          {/* Full-width photo */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 pt-20 pb-24">
+          {/* Small photo */}
           <img
             src="/profile.png"
-            className="w-full object-cover shadow-2xl border-y border-[#D4AF37]/40"
-            style={{ maxHeight: "55vh", objectPosition: "top" }}
+            className="w-24 h-32 object-cover rounded-xl mb-6 border border-[#D4AF37] shadow-2xl"
             alt="Teodora"
           />
 
-          {/* Text below photo */}
-          <div className="px-6 mt-6">
-            <h1 className="text-3xl font-light">Hi, I'm Teodora</h1>
-            <p className="text-[#5BC0BE] mt-4 leading-relaxed text-sm max-w-sm mx-auto">
-              I design intelligent data pipelines and AI systems that transform complex
-              datasets into actionable insights. From predictive models to automated
-              decision tools, I help businesses leverage deep learning, transformers,
-              and statistical methods to make smarter decisions.
-            </p>
-          </div>
+          <h1 className="text-3xl font-light mt-4">Hi, I'm Teodora</h1>
+          <p className="text-[#5BC0BE] mt-4 leading-relaxed text-sm max-w-sm">
+            I design intelligent data pipelines and AI systems that transform complex
+            datasets into actionable insights. From predictive models to automated
+            decision tools, I help businesses leverage deep learning, transformers,
+            and statistical methods to make smarter decisions.
+          </p>
         </div>
+
+        <FloatingWords open={true} isMobile={true} />
 
         <motion.a
           href="#projects"

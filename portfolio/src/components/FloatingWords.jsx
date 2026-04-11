@@ -15,8 +15,7 @@ export default function FloatingWords({ open, isMobile }) {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 150], [1, 0]);
 
-  // On mobile, scale offsets down so words stay within screen bounds
-  const s = isMobile ? 0.45 : 1;
+  const s = isMobile ? 0.7 : 1;
 
   return (
     <>
@@ -25,8 +24,8 @@ export default function FloatingWords({ open, isMobile }) {
           key={i}
           className="absolute flex items-center justify-center"
           style={{
-            top:  isMobile ? "38%" : "30%",
-            left: isMobile ? "50%" : "47%",
+            top:  isMobile ? "20%" : "30%",
+            left: isMobile ? "42%" : "47%",
             opacity,
             pointerEvents: "none",
           }}
