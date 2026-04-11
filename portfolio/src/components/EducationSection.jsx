@@ -123,18 +123,22 @@ export default function EducationSection() {
             onClick={() => setModalFile(null)}
           >
             <div
-              className="bg-[#1C2541] w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] rounded-2xl shadow-2xl overflow-auto relative"
+              className="bg-[#1C2541] w-[96vw] md:w-[88vw] lg:w-[75vw] rounded-2xl shadow-2xl overflow-hidden relative flex flex-col"
+              style={{ height: "92vh" }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                className="absolute top-4 right-4 text-white text-2xl font-bold"
-                onClick={() => setModalFile(null)}
-              >
-                ×
-              </button>
+              <div className="flex justify-end px-4 py-2 shrink-0">
+                <button
+                  className="text-white text-2xl font-bold leading-none"
+                  onClick={() => setModalFile(null)}
+                >
+                  ×
+                </button>
+              </div>
               <iframe
                 src={modalFile}
-                className="w-full h-[90vh] rounded-b-2xl"
+                className="w-full rounded-b-2xl"
+                style={{ flex: 1, minHeight: 0, height: "100%" }}
                 title="Document"
               />
             </div>

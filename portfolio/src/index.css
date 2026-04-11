@@ -11,4 +11,5 @@ html {
 body {
   background: #0B132B;
   background-attachment: fixed;
+  overflow-x: hidden;
 }

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { blogs as blogData } from "../../public/data/blogs.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
 
@@ -32,6 +32,17 @@ export default function BlogSection() {
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(blogState.length / ITEMS_PER_PAGE);
   const visibleBlogs = blogState.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+  // Touch swipe
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (dx > 50) setPage((p) => Math.max(0, p - 1));
+    else if (dx < -50) setPage((p) => Math.min(totalPages - 1, p + 1));
+    touchStartX.current = null;
+  };
 
   // Load counts from Supabase on mount
   useEffect(() => {
@@ -87,7 +98,7 @@ export default function BlogSection() {
   // so it's fine here — no StrictMode double-call issue
 
   return (
-    <section id="blogs" className="py-20 px-10 bg-[#121826]">
+    <section id="blogs" className="py-20 px-5 md:px-10 bg-[#121826]">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
 
         {/* LEFT */}
@@ -108,6 +119,8 @@ export default function BlogSection() {
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 gap-6"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
               {visibleBlogs.map((blog) => (
                 <motion.div
@@ -195,18 +208,42 @@ export default function BlogSection() {
             </motion.div>
           </AnimatePresence>
 
-          {/* DOTS */}
-          <div className="flex justify-center mt-6 gap-2">
-            {Array.from({ length: totalPages }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setPage(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  page === idx ? "bg-[#D4AF37] scale-125" : "bg-white/30 hover:bg-white/60"
-                }`}
-              />
-            ))}
+          {/* PAGINATION */}
+          <div className="flex items-center justify-center mt-6 gap-4">
+            <button
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#FFD166] hover:text-[#FFD166] disabled:opacity-20 disabled:cursor-not-allowed transition"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }).map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setPage(idx)}
+                  className={`rounded-full transition-all ${
+                    page === idx
+                      ? "w-6 h-3 bg-[#FFD166]"
+                      : "w-3 h-3 bg-white/30 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#FFD166] hover:text-[#FFD166] disabled:opacity-20 disabled:cursor-not-allowed transition"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
+
+          <p className="text-center text-white/30 text-xs mt-2">
+            {page + 1} / {totalPages}
+          </p>
         </div>
       </div>
     </section>

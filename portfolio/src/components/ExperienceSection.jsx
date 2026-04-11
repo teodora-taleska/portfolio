@@ -23,7 +23,7 @@ export default function ExperienceSection() {
     <section
       ref={sectionRef}
       id="experience"
-      className="flex gap-12 py-20 px-10 bg-[#1C2541] text-white"
+      className="flex flex-col md:flex-row gap-12 py-20 px-5 md:px-10 bg-[#1C2541] text-white"
     >
       {/* Left side: Experience text */}
       <div className="flex-1">

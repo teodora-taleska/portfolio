@@ -97,8 +97,8 @@ export default function ContactForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Row: name + email */}
-        <div className="flex gap-3">
+        {/* Row: name + email — stacks vertically on mobile */}
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex flex-col gap-1 flex-1">
             <input
               type="text"

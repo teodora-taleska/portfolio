@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { projects as initialProjects } from "../../public/data/projects.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
 
@@ -27,6 +27,17 @@ export default function Projects() {
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const visibleProjects = projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+  // Touch swipe
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (dx > 50) setPage((p) => Math.max(0, p - 1));
+    else if (dx < -50) setPage((p) => Math.min(totalPages - 1, p + 1));
+    touchStartX.current = null;
+  };
 
   // Load counts from Supabase on mount
   useEffect(() => {
@@ -80,7 +91,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-20 px-10 bg-[#121826]">
+    <section id="projects" className="py-20 px-5 md:px-10 bg-[#121826]">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
 
         {/* LEFT */}
@@ -94,7 +105,6 @@ export default function Projects() {
 
         {/* RIGHT */}
         <div className="md:w-2/3">
-
           <AnimatePresence mode="wait">
             <motion.div
               key={page}
@@ -103,6 +113,8 @@ export default function Projects() {
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 gap-6"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
               {visibleProjects.map((p) => (
                 <motion.div
@@ -115,16 +127,12 @@ export default function Projects() {
                     <h4 className="text-xl font-semibold text-[#5BC0BE] flex items-center gap-3">
                       {p.title}
 
-                      {/* GITHUB */}
                       {p.github && (
                         <a
                           href={p.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLinkClick(p.id);
-                          }}
+                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
                           className="relative group flex items-center"
                         >
                           <img
@@ -138,16 +146,12 @@ export default function Projects() {
                         </a>
                       )}
 
-                      {/* YOUTUBE */}
                       {p.youtube && (
                         <a
                           href={p.youtube}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLinkClick(p.id);
-                          }}
+                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
                           className="relative group flex items-center"
                         >
                           <img
@@ -161,16 +165,12 @@ export default function Projects() {
                         </a>
                       )}
 
-                      {/* GENERIC LINK */}
                       {p.link && (
                         <a
                           href={p.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLinkClick(p.id);
-                          }}
+                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
                           className="relative group flex items-center"
                         >
                           <img
@@ -186,76 +186,75 @@ export default function Projects() {
                     </h4>
                   </div>
 
-                  {/* DESCRIPTION */}
                   <p className="text-white/70 mt-2">{p.desc}</p>
 
-                  {/* TECH */}
                   <div className="mt-3 flex gap-2 flex-wrap">
                     {p.tech?.map((t, idx) => (
-                      <span
-                        key={idx}
-                        className="text-xs text-[#FFD700] bg-white/10 px-2 py-1 rounded-full"
-                      >
+                      <span key={idx} className="text-xs text-[#FFD700] bg-white/10 px-2 py-1 rounded-full">
                         {t}
                       </span>
                     ))}
                   </div>
 
-                  {/* INTERACTIONS */}
                   <div className="mt-4 flex gap-4 items-center text-white/60">
-
                     <button
                       onClick={() => handleReaction(p.id, "like")}
-                      className={`flex items-center gap-1 transition ${
-                        p.userReaction === "like"
-                          ? "text-green-400"
-                          : "hover:text-green-400"
-                      }`}
+                      className={`flex items-center gap-1 transition ${p.userReaction === "like" ? "text-green-400" : "hover:text-green-400"}`}
                     >
-                      <ThumbsUp
-                        size={16}
-                        fill={p.userReaction === "like" ? "currentColor" : "none"}
-                      />
+                      <ThumbsUp size={16} fill={p.userReaction === "like" ? "currentColor" : "none"} />
                       <span className="text-xs">{p.likes}</span>
                     </button>
 
                     <button
                       onClick={() => handleReaction(p.id, "dislike")}
-                      className={`flex items-center gap-1 transition ${
-                        p.userReaction === "dislike"
-                          ? "text-red-400"
-                          : "hover:text-red-400"
-                      }`}
+                      className={`flex items-center gap-1 transition ${p.userReaction === "dislike" ? "text-red-400" : "hover:text-red-400"}`}
                     >
-                      <ThumbsDown
-                        size={16}
-                        fill={p.userReaction === "dislike" ? "currentColor" : "none"}
-                      />
+                      <ThumbsDown size={16} fill={p.userReaction === "dislike" ? "currentColor" : "none"} />
                     </button>
 
-                    <span className="ml-auto text-xs opacity-50">
-                      clicks: {p.clicks}
-                    </span>
+                    <span className="ml-auto text-xs opacity-50">clicks: {p.clicks}</span>
                   </div>
                 </motion.div>
               ))}
             </motion.div>
           </AnimatePresence>
 
-          {/* DOTS */}
-          <div className="flex justify-center mt-6 gap-2">
-            {Array.from({ length: totalPages }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setPage(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  page === idx
-                    ? "bg-[#D4AF37] scale-125"
-                    : "bg-white/30 hover:bg-white/60"
-                }`}
-              />
-            ))}
+          {/* PAGINATION */}
+          <div className="flex items-center justify-center mt-6 gap-4">
+            <button
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }).map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setPage(idx)}
+                  className={`rounded-full transition-all ${
+                    page === idx
+                      ? "w-6 h-3 bg-[#D4AF37]"
+                      : "w-3 h-3 bg-white/30 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
+
+          <p className="text-center text-white/30 text-xs mt-2">
+            {page + 1} / {totalPages}
+          </p>
         </div>
       </div>
     </section>
