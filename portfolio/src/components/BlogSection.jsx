@@ -30,12 +30,12 @@ export default function BlogSection() {
   );
 
   const [page, setPage] = useState(0);
-  const direction = useRef(1); // 1 = forward, -1 = backward
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const totalPages = Math.ceil(blogState.length / ITEMS_PER_PAGE);
   const visibleBlogs = blogState.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
   const goTo = (next) => {
-    direction.current = next > page ? 1 : -1;
+    setDirection(next > page ? 1 : -1);
     setPage(next);
   };
 
@@ -122,12 +122,18 @@ export default function BlogSection() {
 
         {/* RIGHT */}
         <div className="md:w-2/3">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={page}
-              initial={{ x: direction.current * 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: direction.current * -100, opacity: 0 }}
+              custom={direction}
+              variants={{
+                initial: (d) => ({ x: d * 100, opacity: 0 }),
+                animate: { x: 0, opacity: 1 },
+                exit: (d) => ({ x: d * -100, opacity: 0 }),
+              }}
+              initial="initial"
+              animate="animate"
+              exit="exit"
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 gap-6"
               onTouchStart={handleTouchStart}
