@@ -82,7 +82,7 @@ export default function Blogs() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="relative text-gray-400 max-w-xl mx-auto text-lg"
         >
-          Thoughts on AI, data, and software — written from experience.
+          Thoughts on AI, data, and software.
         </motion.p>
       </div>
 

@@ -1,5 +1,62 @@
 export const blogs = [
   {
+  id: "react-native-vs-react-web",
+  title: "React Native vs React Web: A Web Dev Who Went Mobile",
+  image: "/blog-covers/react-native-vs-react-web.jpg",
+  body: `I started with React on the web. Components, JSX, props, state, I learned the pattern there, as most people do. So when I moved to React Native for a real production project, I expected a rough transition. It was not. What surprised me is that going mobile actually felt more natural, not less. And by the end of it, I preferred it.
+
+This post is for web developers curious about mobile. I want to be honest about what is harder, what is different, and why I think the extra complexity is worth it.
+
+What stays exactly the same.
+
+This is the part that makes React Native approachable. Functional components, hooks, props, state – all identical. useState, useEffect, useContext, useRef, and useMemo all work exactly as you know them. Most libraries like Axios, React Query, Zustand, and Redux work – sometimes with small adjustments. If you know React, you already know the core of React Native. You are not learning a new framework. You are learning a new rendering target.
+
+What changes – the building blocks.
+
+The first thing that trips web developers up is the tags. In React Native, HTML does not exist. There is no div, no p, no span. Instead, you have View, Text, TextInput, ScrollView, TouchableOpacity, FlatList, and Image. At first, it feels like unnecessary renaming, but it actually reflects the platform better. A View is not a div; it is a layout container built for a screen, not a document. Everything uses flexbox by default (with column layout), which is cleaner than what you are used to on the web.
+
+One thing that will crash your app immediately: if you put raw text outside of a Text component, React Native throws an error. The web lets you get away with sloppy structure. Mobile does not.
+
+Touchable elements are another adjustment. On the web, almost anything can have an onClick. In React Native, you need to wrap things in Pressable or TouchableOpacity to get proper touch behavior with visual feedback. A plain View with an onPress does not behave the way users expect.
+
+Images work differently, too. On the web, you write img src. In React Native, you write Image source with either a require for local files or a URI object for remote ones. Small difference, but enough to slow you down the first time.
+
+Styling is the biggest mental shift.
+
+Forget CSS files. Forget class names, cascading, inheritance, and global stylesheets. In React Native, you write styles as plain JavaScript objects using StyleSheet.create, and you apply them directly to your component. Everything is scoped. Nothing leaks.
+
+There are no units either, no px, no rem, no em. Just plain numbers that map to density-independent pixels. And since flex is the default for everything, once you internalize that, layout actually becomes more predictable than CSS.
+
+The hardest part is unlearning. If you keep trying to think in CSS, you will fight it constantly. If you treat it as its own system from day one, you adapt within a couple of days.
+
+A few things web developers never think about.
+
+Scrolling is not automatic in React Native. If your content overflows the screen and you did not wrap it in a ScrollView or FlatList, it won’t scroll unless you explicitly wrap it. On the web, the browser handles this for you.
+
+The keyboard is a problem you have to solve. On mobile, the software keyboard pushes the screen up and can cover your inputs. You handle this with KeyboardAvoidingView. It is one of those things that does not exist as a concept in web development, but becomes a real issue the moment you have a form near the bottom of the screen.
+
+iOS and Android are not the same. Shadow styles work differently between platforms. Fonts render differently. Some APIs are platform-specific. You end up writing Platform.OS checks for edge cases. The web has browser inconsistencies, but this is a different kind of fragmentation.
+
+Tooling exists, but it’s not as seamless as browser DevTools. No element inspector, no computed styles panel. React Native Debugger exists, but it is not on the same comfort level. Expo helps, but this is a genuine step down in tooling.
+
+So why do I prefer it?
+
+With all of that, the extra complexity, the different mental model, the keyboard handling and platform quirks, I still prefer building mobile, and I think the reason is the feedback loop.
+
+With Expo, you install the app on your phone, scan a QR code, and you are live. Every save reflects on the device immediately. I was testing real-time WebSocket features across multiple physical devices at the same time, watching state sync between them in real time. That experience does not have a web equivalent. Holding something you built, using it the way real users would, changes how you think about what you are making.
+
+Web React always felt slightly static to me by comparison. You are building pages. In React Native, you are building something that lives on someone’s device, in their pocket, that they open and interact with physically. That difference in tangibility matters more than I expected.
+
+Is it harder at the beginning? Yes, genuinely. The tag names, the styling system, the navigation setup, and the platform differences are real overhead. But none of it is deep. It is all surface-level adjustment, not fundamental rethinking. A week in, it stops feeling foreign.
+
+If you are a web developer thinking about mobile, React Native is the lowest friction path there is. The knowledge you have carries over almost entirely. The things that are different are learnable quickly.
+
+And there’s a good chance you’ll end up preferring it too.`,
+  date: "2026-04-11",
+  keywords: ["React Native", "React", "Mobile", "Web"],
+  link: "/blogs/react-native-vs-react-web",
+},
+  {
     id: "ai-coding-tools",
     title: "What AI Coding Tools Are Actually Good At (And Where They Fail)",
     image: "/blog-covers/ai-coding-tools.jpg",
