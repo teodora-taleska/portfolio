@@ -20,19 +20,26 @@ export async function getReactions(id) {
 }
 
 export async function saveReactions(id, type, patch) {
-  console.log("saveReactions called:", id, patch);
-
-  const { data, error } = await supabase
+  // Try updating the existing row first (only touches patch fields)
+  const { data: updated, error: updateError } = await supabase
     .from("reactions")
-    .upsert(
-      { id, type, likes: 0, dislikes: 0, clicks: 0, ...patch },
-      { onConflict: "id" }
-    )
+    .update(patch)
+    .eq("id", id)
     .select();
 
-  if (error) {
-    console.error("saveReactions error:", error.message, error);
-  } else {
-    console.log("saveReactions success:", data);
+  if (updateError) {
+    console.error("saveReactions update error:", updateError.message);
+    return;
+  }
+
+  // No existing row — insert with safe defaults
+  if (!updated || updated.length === 0) {
+    const { error: insertError } = await supabase
+      .from("reactions")
+      .insert({ id, type, likes: 0, dislikes: 0, clicks: 0, ...patch });
+
+    if (insertError) {
+      console.error("saveReactions insert error:", insertError.message);
+    }
   }
 }

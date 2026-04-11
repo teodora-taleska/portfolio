@@ -56,6 +56,7 @@ export default function BlogSection() {
             ...blog,
             likes: Math.max(data.likes, userReaction === "like" ? 1 : 0),
             dislikes: Math.max(data.dislikes, userReaction === "dislike" ? 1 : 0),
+            clicks: data.clicks,
           };
         })
       );
@@ -63,11 +64,15 @@ export default function BlogSection() {
   }, []);
 
   const handleClick = async (id) => {
+    let newClicks = 0;
     setBlogState((prev) =>
-      prev.map((b) => b.id === id ? { ...b, clicks: b.clicks + 1 } : b)
+      prev.map((b) => {
+        if (b.id !== id) return b;
+        newClicks = b.clicks + 1;
+        return { ...b, clicks: newClicks };
+      })
     );
-    const current = blogState.find((b) => b.id === id);
-    await saveReactions(id, "blog", { clicks: (current?.clicks ?? 0) + 1 });
+    await saveReactions(id, "blog", { clicks: newClicks });
   };
 
   const handleReaction = (id, type) => {
