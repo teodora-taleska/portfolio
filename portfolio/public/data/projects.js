@@ -35,7 +35,7 @@ export const projects = [
   {
     id: "paperless-ngx",
     title: "Paperless-ngx Contributions",
-    desc: "Fixed duplicate detection checks and implemented unit tests in this document management system.",
+    desc: "Open-source group project. My contributions: fixed duplicate detection logic and added unit tests to improve reliability of the document management pipeline.",
     github: "https://github.com/kq5-vcd/paperless-ngx/commit/fb037056ae9d3f4725f247976e5d313a4251fe25",
     tech: ["Python", "Django", "Unit Testing"],
     clicks: 0,
@@ -46,7 +46,7 @@ export const projects = [
   {
     id: "tampered-document-ai",
     title: "Tampered Document Detection (Private)",
-    desc: "AI-based detection of tampered fonts in documents using Variational Autoencoders.",
+    desc: "Group research project. My focus: building a VAE-based model to detect tampered fonts in documents, distinguishing authentic text from digitally altered characters using unsupervised deep learning.",
     github: null,
     tech: ["Python", "PyTorch", "Variational Autoencoder", "Computer Vision"],
     clicks: 0,
@@ -57,7 +57,7 @@ export const projects = [
   {
     id: "football-network-analysis",
     title: "Football Player Value Estimation",
-    desc: "Network analysis and ML models predict player market value using passing networks and performance metrics.",
+    desc: "Group project exploring how graph-based features from passing networks, combined with ML models, can estimate a football player's market value, my contribution focused on network feature engineering and model evaluation.",
     github: "https://github.com/teodora-taleska/network_analysis_project",
     tech: ["Python", "NetworkX", "Pandas", "Scikit-learn", "XGBoost", "Matplotlib", "Seaborn"],
     clicks: 0,
@@ -91,7 +91,7 @@ export const projects = [
   {
     id: "teodora-space",
     title: "Teodora’s Space",
-    desc: "3D personal web experience using React Three Fiber to showcase projects and experiments interactively.",
+    desc: "A personal experiment in 3D web development, built to learn React Three Fiber and explore how interactive 3D environments can make a portfolio feel more like a space than a page.",
     github: "https://github.com/teodora-taleska/teodora-space",
     tech: ["React", "Three.js", "React Three Fiber", "JavaScript", "CSS"],
     clicks: 0,
@@ -102,7 +102,7 @@ export const projects = [
   {
     id: "task-manager",
     title: "Task Manager",
-    desc: "Python OOP project for task management with authentication and secure storage.",
+    desc: "My first Python project, built to learn OOP fundamentals hands-on. A task manager with user authentication and persistent storage, where every design decision was a lesson.",
     github: "https://github.com/teodora-taleska/task-manager",
     youtube: "https://youtu.be/IgUcO-DDYWM",
     tech: ["Python", "OOP", "SQLite"],
@@ -114,9 +114,9 @@ export const projects = [
   {
     id: "global-hunger-index",
     title: "Global Hunger Index Data Analysis",
-    desc: "Analyzed Global Hunger Index dataset from Kaggle to explore hunger patterns and trends worldwide.",
+    desc: "Built to learn R and R Markdown, the kind of tool that turns analysis into a living, readable report on the web. Explored global hunger patterns through interactive visualisations and narrative-driven data storytelling.",
     github: "https://github.com/teodora-taleska/global-hunger-index",
-    tech: ["Python", "Pandas", "Matplotlib", "Seaborn", "Data Analysis"],
+    tech: ["R", "Pandas", "Seaborn", "Data Analysis"],
     clicks: 0,
     likes: 0,
     dislikes: 0,
@@ -125,7 +125,7 @@ export const projects = [
   {
     id: "equalita-care",
     title: "Equalita Care App",
-    desc: "Mobile app promoting gender equality and reproductive health education aligned with UN SDG 5.",
+    desc: "Group project developed through a Human-Computer Interaction course, focused on designing technology that addresses real-world sustainability challenges. Built a mobile app tackling gender equality and reproductive health, aligned with UN SDG 5, balancing UX research, ethical design, and social impact.",
     github: "https://github.com/teodora-taleska/hci_project",
     youtube: "https://www.youtube.com/watch?v=JEVIl0_Dbi8",
     tech: ["React Native", "Figma Prototype", "Mobile Development"],
@@ -137,7 +137,7 @@ export const projects = [
   {
     id: "mandelbrot-set",
     title: "Mandelbrot Set Renderer",
-    desc: "Rendered Mandelbrot set in Java using sequential, parallel, and distributed (RMI) approaches.",
+    desc: "A hands-on dive into parallel and distributed computing with Java, rendered the Mandelbrot set three ways (sequential, multi-threaded, and distributed via RMI) to understand how concurrency and distribution change performance at scale.",
     github: "https://github.com/teodora-taleska/mandelbrot-set",
     tech: ["Java", "JavaFX", "Multi-threading", "RMI", "Distributed Systems"],
     clicks: 0,
