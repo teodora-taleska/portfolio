@@ -29,7 +29,7 @@ export default function Hero() {
   /* ── MOBILE LAYOUT ─────────────────────────────────────────── */
   if (isMobile) {
     return (
-      <section className="min-h-screen relative flex items-center justify-center overflow-hidden">
+      <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: '100svh' }}>
         <CursorLight />
         <NeuralBackground open={true} />
 
@@ -55,7 +55,7 @@ export default function Hero() {
 
         <motion.a
           href="#projects"
-          className="absolute bottom-8"
+          className="absolute bottom-14"
           animate={{ y: [0, 12, 0] }}
           transition={{ repeat: Infinity, duration: 1 }}
         >
