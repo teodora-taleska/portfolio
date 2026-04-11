@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import emailjs from "@emailjs/browser";
 
-const SERVICE_ID = import.meta.env.VITE_EMAIL_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
-const AUTO_REPLY_TEMPLATE_ID = import.meta.env.VITE_AUTO_REPLY_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAIL_PUBLIC_KEY;
+const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
 const empty = { from_name: "", to_email: "", title: "", message: "" };
 
@@ -31,46 +27,39 @@ export default function ContactForm() {
     return !Object.values(newErrors).some(Boolean);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setStatus("sending");
 
-    emailjs
-      .send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        {
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
           name: formData.from_name,
-          to_email: formData.to_email,
-          title: formData.title,
+          email: formData.to_email,
+          subject: formData.title,
           message: formData.message,
-          time: new Date().toLocaleString(),
-        },
-        PUBLIC_KEY
-      )
-      .then(() => {
-        emailjs.send(
-          SERVICE_ID,
-          AUTO_REPLY_TEMPLATE_ID,
-          {
-            name: formData.from_name,
-            to_email: formData.to_email,
-            title: formData.title,
-            message: formData.message,
-            time: new Date().toLocaleString(),
-          },
-          PUBLIC_KEY
-        );
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
         setStatus("success");
         setFormData(empty);
         setErrors({});
-      })
-      .catch((err) => {
-        console.error(err);
+      } else {
+        console.error("Web3Forms error:", data);
         setStatus("error");
-      });
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      setStatus("error");
+    }
   };
 
   const fieldClass = (name) =>
