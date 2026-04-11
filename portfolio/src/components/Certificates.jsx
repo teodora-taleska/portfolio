@@ -4,8 +4,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const certificates = [
   { img: "/certificates/claude_code.jpg" },
-  { img: "/certificates/python_lib.png" },
   { img: "/certificates/soft_skills.jpeg" },
+  { img: "/certificates/python_lib.png" },
   { img: "/certificates/advanced_python.jpeg" },
   { img: "/certificates/digital_marketing.png" },
   { img: "/certificates/stat3.jpeg" },
