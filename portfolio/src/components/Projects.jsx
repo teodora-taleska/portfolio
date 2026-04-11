@@ -25,8 +25,14 @@ export default function Projects() {
   );
 
   const [page, setPage] = useState(0);
+  const direction = useRef(1); // 1 = forward, -1 = backward
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const visibleProjects = projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+  const goTo = (next) => {
+    direction.current = next > page ? 1 : -1;
+    setPage(next);
+  };
 
   // Touch swipe
   const touchStartX = useRef(null);
@@ -34,8 +40,8 @@ export default function Projects() {
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
-    if (dx > 50) setPage((p) => Math.max(0, p - 1));
-    else if (dx < -50) setPage((p) => Math.min(totalPages - 1, p + 1));
+    if (dx > 50) goTo(Math.max(0, page - 1));
+    else if (dx < -50) goTo(Math.min(totalPages - 1, page + 1));
     touchStartX.current = null;
   };
 
@@ -108,9 +114,9 @@ export default function Projects() {
           <AnimatePresence mode="wait">
             <motion.div
               key={page}
-              initial={{ x: 100, opacity: 0 }}
+              initial={{ x: direction.current * 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -100, opacity: 0 }}
+              exit={{ x: direction.current * -100, opacity: 0 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 gap-6"
               onTouchStart={handleTouchStart}
@@ -222,7 +228,7 @@ export default function Projects() {
           {/* PAGINATION */}
           <div className="flex items-center justify-center mt-6 gap-4">
             <button
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              onClick={() => goTo(Math.max(0, page - 1))}
               disabled={page === 0}
               className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
             >
@@ -233,7 +239,7 @@ export default function Projects() {
               {Array.from({ length: totalPages }).map((_, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setPage(idx)}
+                  onClick={() => goTo(idx)}
                   className={`rounded-full transition-all ${
                     page === idx
                       ? "w-6 h-3 bg-[#D4AF37]"
@@ -244,7 +250,7 @@ export default function Projects() {
             </div>
 
             <button
-              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              onClick={() => goTo(Math.min(totalPages - 1, page + 1))}
               disabled={page === totalPages - 1}
               className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
             >
