@@ -2,7 +2,7 @@ export const projects = [
    {               
     id: "player-ltv-studio",                                                                                                                                                       
     title: "Player LTV Studio", 
-    desc: "Educational full-stack project exploring BG/NBD + Gamma-Gamma LTV models, FastAPI, and Next.js — built in 3 days with Claude Code to learn ML-in-production, marketing analytics, and end-to-end deployment.",                                                                                                                                          
+    desc: "Educational full-stack project exploring BG/NBD + Gamma-Gamma LTV models, FastAPI, and Next.js. Built in 3 days with Claude Code to learn ML-in-production, marketing analytics, and end-to-end deployment.",
     github: "https://github.com/teodora-taleska/playerltvstudio",
     web: "https://playerltvstudio.vercel.app/",
     tech: ["Python", "FastAPI", "Next.js", "TypeScript", "Supabase", "Tailwind CSS", "Chart.js", "lifetimes", "pandas"],

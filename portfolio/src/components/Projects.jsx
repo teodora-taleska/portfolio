@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import { projects as initialProjects } from "../../public/data/projects.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
 
@@ -173,6 +173,21 @@ export default function Projects() {
                           />
                           <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
                             Demo
+                          </span>
+                        </a>
+                      )}
+
+                      {p.web && (
+                        <a
+                          href={p.web}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                          className="relative group flex items-center"
+                        >
+                          <Globe size={16} className="text-white opacity-70 group-hover:opacity-100 transition duration-300" />
+                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                            Website
                           </span>
                         </a>
                       )}
