@@ -13,27 +13,37 @@ npm run lint      # ESLint (flat config, React hooks plugin)
 
 No test suite is configured.
 
+## Environment variables
+
+Required in `.env` (Vite exposes these via `import.meta.env`):
+- `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` — Supabase project for reactions/clicks
+- `VITE_WEB3FORMS_KEY` — Web3Forms access key used in `BlogPost.jsx` for blog feedback submissions
+
+EmailJS credentials are hardcoded public keys inside `ContactForm.jsx` (intentional).
+
 ## Architecture
 
-**Single Page Application** — React 19 + Vite + Tailwind CSS. No routing library; navigation uses anchor links (`#projects`, `#experience`, etc.) with CSS smooth scrolling.
+**SPA with client-side routing** — React 19 + Vite + Tailwind CSS + React Router v7. Anchor-link navigation (`#projects`, `#experience`, etc.) with CSS smooth scrolling handles in-page sections; React Router handles the `/blogs` and `/blogs/:slug` routes.
 
-### Page structure
+### Routes
 
-`src/pages/Home.jsx` is the entire app. It composes sections in order: Navbar → Hero → Projects → Experience → BlogSection → Certificates → Education → ContactForm → Footer.
-
-`src/pages/Blogs.jsx` is a stub (not yet implemented).
+- `/` → `src/pages/Home.jsx` — composes all portfolio sections: Navbar → Hero → Projects → Experience → BlogSection → Certificates → Education → ContactForm → Footer
+- `/blogs` → `src/pages/Blogs.jsx` — blog listing (stub, not yet implemented)
+- `/blogs/:slug` → `src/pages/BlogPost.jsx` — full blog post page with reactions and a Web3Forms feedback form
 
 ### Data
 
-Static data lives in `public/data/` as plain JS modules:
-- `projects.js` — array of 13 projects, each with `id`, `title`, `desc`, `github`, `youtube?`, `tech[]`, and mutable interaction fields (`likes`, `dislikes`, `clicks`, `userReaction`)
-- `blogs.js` — array of 8 blog posts with `id`, `title`, `body`, `date`, `keywords[]`, `link`
+Static data lives in `public/data/` as plain JS modules (imported directly, not fetched):
+- `projects.js` — array of projects, each with `id`, `title`, `desc`, `github?`, `youtube?`, `web?`, `tech[]`, and interaction fields (`likes`, `dislikes`, `clicks`, `userReaction`)
+- `blogs.js` — array of blog posts with `id`, `title`, `body`, `date`, `keywords[]`, `link`, `image?`
 
-These files are served as static assets (not bundled), so they're fetched at runtime. Project interaction state (likes/dislikes/reactions) is persisted to `localStorage`.
+### Persistence
+
+Reactions (likes/dislikes) and click counts are stored in **Supabase** (`reactions` table, keyed by `id`). `src/lib/supabase.js` exposes `getReactions(id)` and `saveReactions(id, type, patch)`. The user's own reaction choice is also mirrored to `localStorage` to avoid double-voting across page loads.
 
 ### Key component behaviors
 
-- **Projects.jsx** — Paginated (3 per page), loads data from `public/data/projects.js` via fetch, persists reactions to localStorage.
+- **Projects.jsx** — Paginated (3 per page), initialises from `projects.js`, syncs counts from Supabase on mount, persists user reactions to localStorage. Touch-swipe enabled.
 - **ExperienceSection.jsx + CodeToAppAnimation.jsx** — Scroll-triggered animation using Framer Motion `useScroll`/`useTransform`.
 - **EducationSection.jsx** — Opens PDF files from `public/language/` in inline modals.
 - **ContactForm.jsx** — Sends email via EmailJS; credentials are in the component (public keys only).
