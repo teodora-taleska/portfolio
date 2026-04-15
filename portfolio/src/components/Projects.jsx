@@ -137,7 +137,19 @@ export default function Projects() {
                   {/* TITLE + LINKS */}
                   <div className="flex items-center justify-between">
                     <h4 className="text-xl font-semibold text-[#5BC0BE] flex items-center gap-3">
-                      {p.title}
+                      {p.github ? (
+                        <a
+                          href={p.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                          className="hover:text-[#D4AF37] transition duration-200"
+                        >
+                          {p.title}
+                        </a>
+                      ) : (
+                        p.title
+                      )}
 
                       {p.github && (
                         <a
