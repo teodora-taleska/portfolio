@@ -2,14 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* ── Theme variables ───────────────────────────────────────── */
+:root {
+  /* dark (default) */
+  --bg:     11  19  43;   /* #0B132B - darkest navy, dark sections  */
+  --sect:   28  37  65;   /* #1C2541 - lighter sections             */
+  --card:   22  35  65;   /* #162341 - card surfaces                */
+  --alt:    18  24  38;   /* #121826 - misc / kept for compat       */
+  --fg:    255 255 255;
+  --body:  209 213 219;   /* gray-300 */
+  --subtle:156 163 175;   /* gray-400 */
+  color-scheme: dark;
 }
 
-/* fixed luxury background */
+:root[data-theme="light"] {
+  --bg:    255 255 255;   /* white - dark sections                  */
+  --sect:  240 243 249;   /* #F0F3F9 - warm-gray lighter sections   */
+  --card:  255 255 255;   /* white cards                            */
+  --alt:   241 245 249;   /* slate-100                              */
+  --fg:     17  24  39;
+  --body:   75  85  99;
+  --subtle:107 114 128;
+  color-scheme: light;
+}
+
+/* ── Global ────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
 body {
-  background: #0B132B;
+  background: rgb(var(--bg));
   background-attachment: fixed;
   overflow-x: hidden;
+  color: rgb(var(--fg));
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Card — gold top accent + border ──────────────────────── */
+.card-bordered {
+  border-top:    2px solid rgba(212, 175, 55, 0.55);
+  border-left:   1px solid rgba(255, 255, 255, 0.07);
+  border-right:  1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+[data-theme="light"] .card-bordered {
+  border-top:    2px solid rgba(212, 175, 55, 0.60);
+  border-left:   1px solid rgba(0, 0, 0, 0.07);
+  border-right:  1px solid rgba(0, 0, 0, 0.07);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+/* ── Lighter-section gradient (Projects, Blogs, Education) ── */
+/* Dark: sect base + gold corner glow fading to slightly deeper navy */
+.section-gradient {
+  background:
+    radial-gradient(ellipse at 0% 100%, rgba(212,175,55,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 0%, rgba(91,192,190,0.04) 0%, transparent 50%),
+    linear-gradient(160deg, rgb(var(--sect)) 0%, rgb(var(--bg)) 100%);
+}
+/* Light: sect base (warm gray) with a very soft gold shimmer top-left */
+[data-theme="light"] .section-gradient {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(212,175,55,0.07) 0%, transparent 55%),
+    linear-gradient(160deg, rgb(var(--sect)) 0%, rgb(var(--bg)) 100%);
+}
+
+/* ── Icon helper ───────────────────────────────────────────── */
+.icon-auto-invert {
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
+}
+[data-theme="light"] .icon-auto-invert {
+  filter: none;
 }
