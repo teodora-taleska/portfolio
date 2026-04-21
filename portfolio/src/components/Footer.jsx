@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0B132B] text-white py-10 px-6 text-center">
+    <footer className="bg-th-bg text-th-fg py-10 px-6 text-center">
       <div className="flex justify-center gap-6 mb-4">
         {/* LinkedIn */}
         <a
@@ -54,7 +54,7 @@ export default function Footer() {
         </a>
       </div>
 
-      <p className="text-gray-400 text-sm">
+      <p className="text-th-body text-sm">
         © {new Date().getFullYear()} Teodora Taleska. All rights reserved.
       </p>
     </footer>

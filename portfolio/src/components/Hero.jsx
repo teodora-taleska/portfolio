@@ -33,7 +33,6 @@ export default function Hero() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Desktop scroll animations
   const scale = useTransform(scrollY, [0, 400], [1, 0.75]);
   const x = useTransform(scrollY, [0, 400], [0, -200]);
   const textOpacity = useTransform(scrollY, [150, 400], [0, 1]);
@@ -43,7 +42,6 @@ export default function Hero() {
     return scrollY.on("change", (y) => setOpen(y < 150));
   }, [scrollY]);
 
-  /* ── MOBILE ─────────────────────────────────────────────────── */
   if (isMobile) {
     return (
       <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: "100svh" }}>
@@ -56,7 +54,7 @@ export default function Hero() {
             className="w-24 h-32 object-cover rounded-xl mb-6 border border-[#D4AF37] shadow-2xl"
             alt="Teodora"
           />
-          <h1 className="text-3xl font-light mt-4">Hi, I'm Teodora</h1>
+          <h1 className="text-3xl font-light mt-4 text-th-fg">Hi, I'm Teodora</h1>
           <p className="text-[#5BC0BE] mt-4 leading-relaxed text-sm max-w-sm">{bio}</p>
         </div>
 
@@ -66,14 +64,13 @@ export default function Hero() {
     );
   }
 
-  /* ── DESKTOP (scroll-animated) ──────────────────────────────── */
   return (
     <section className="h-[200vh] relative">
       <CursorLight />
 
       <div className="sticky top-0 h-screen flex items-center justify-center">
         <NeuralBackground open={open} />
-        <div className="absolute w-[400px] h-[400px] bg-[#1C2541] rounded-full blur-3xl opacity-40" />
+        <div className="absolute w-[400px] h-[400px] bg-th-card rounded-full blur-3xl opacity-40" />
 
         <motion.img
           src="/profile.png"
@@ -88,7 +85,7 @@ export default function Hero() {
           className="absolute right-20 max-w-md"
           style={{ opacity: textOpacity, x: textX }}
         >
-          <h1 className="text-4xl font-light">Hi, I'm Teodora</h1>
+          <h1 className="text-4xl font-light text-th-fg">Hi, I'm Teodora</h1>
           <p className="text-[#5BC0BE] mt-4 leading-relaxed">{bio}</p>
         </motion.div>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function EducationSection() {
-  const [modalFile, setModalFile] = useState(null); // file to open in modal
+  const [modalFile, setModalFile] = useState(null);
 
   const education = [
     {
@@ -31,13 +31,12 @@ export default function EducationSection() {
   ];
 
   return (
-    <section id="education" className="py-20 px-4 md:px-6 bg-[#121826] text-white relative overflow-hidden">
+    <section id="education" className="py-20 px-4 md:px-6 bg-th-sect section-gradient text-th-fg relative overflow-hidden">
       <h3 className="text-4xl font-bold mb-16 text-center text-[#D4AF37]">EDUCATION</h3>
 
       <div className="relative max-w-7xl mx-auto space-y-8">
-        {/* space-y-20 5rem? 16->4rem, 13-> 3rem, 8->2rem...*/}
         {education.map((edu, i) => {
-          const isLeft = i % 2 === 0; // zig-zag
+          const isLeft = i % 2 === 0;
 
           return (
             <motion.div
@@ -49,19 +48,18 @@ export default function EducationSection() {
               className={`flex flex-col md:flex-row items-center md:items-start gap-6 ${isLeft ? "md:flex-row" : "md:flex-row-reverse"}`}
             >
               {/* Card */}
-              <div className="bg-[#1C2541] p-6 md:p-6 rounded-2xl shadow-2xl relative md:w-3/5 flex flex-col justify-center">
+              <div className="bg-th-card p-6 md:p-6 rounded-2xl shadow-2xl card-bordered relative md:w-3/5 flex flex-col justify-center">
                 <h4 className="text-xl font-bold">{edu.degree}</h4>
-                <p className="text-white/80 mt-1">{edu.school}</p>
-                <p className="text-white/70 mt-1">{edu.duration}</p>
+                <p className="text-th-fg/80 mt-1">{edu.school}</p>
+                <p className="text-th-fg/70 mt-1">{edu.duration}</p>
 
-                {/* Floating icons for masters */}
                 {edu.type === "master" && (
                   <div className="flex gap-4 mt-4">
                     {edu.languages.map((lang, idx) => (
                       <motion.div
                         key={idx}
                         className="w-10 h-10 bg-[#FFD700]/30 flex items-center justify-center rounded-full cursor-pointer"
-                        initial={{ scale: 1.5 }} // start bigger for attention
+                        initial={{ scale: 1.5 }}
                         whileInView={{ scale: 1 }}
                         viewport={{ once: true }}
                         whileHover={{ scale: 1.3, backgroundColor: "rgba(255,215,0,0.6)" }}
@@ -77,7 +75,6 @@ export default function EducationSection() {
                   </div>
                 )}
 
-                {/* Bachelor thesis icon */}
                 {edu.type === "bachelor" && (
                   <div className="mt-4">
                     <motion.div
@@ -97,16 +94,6 @@ export default function EducationSection() {
                   </div>
                 )}
               </div>
-
-              {/* Floating book icon */}
-              {/*<motion.img*/}
-              {/*  src="icons/book.png"*/}
-              {/*  alt="Book"*/}
-              {/*  className={`absolute w-12 h-12 opacity-90 ${isLeft ? "left-[-20px]" : "right-[-20px]"} top-0`}*/}
-              {/*  animate={{ y: [0, -10, 0] }}*/}
-              {/*  transition={{ repeat: Infinity, duration: 2 + i }}*/}
-              {/*  style={{ filter: "invert(100%)" }} // make it white*/}
-              {/*/>*/}
             </motion.div>
           );
         })}
@@ -123,13 +110,13 @@ export default function EducationSection() {
             onClick={() => setModalFile(null)}
           >
             <div
-              className="bg-[#1C2541] w-[96vw] md:w-[88vw] lg:w-[75vw] rounded-2xl shadow-2xl overflow-hidden relative flex flex-col"
+              className="bg-th-card w-[96vw] md:w-[88vw] lg:w-[75vw] rounded-2xl shadow-2xl overflow-hidden relative flex flex-col"
               style={{ height: "92vh" }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-end px-4 py-2 shrink-0">
                 <button
-                  className="text-white text-2xl font-bold leading-none"
+                  className="text-th-fg text-2xl font-bold leading-none"
                   onClick={() => setModalFile(null)}
                 >
                   ×

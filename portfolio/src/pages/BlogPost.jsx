@@ -75,7 +75,6 @@ export default function BlogPost() {
     });
   };
 
-  // Sync reaction changes to Supabase outside the state updater
   useEffect(() => {
     if (!blog) return;
     saveReactions(slug, "blog", { likes: reaction.likes, dislikes: reaction.dislikes });
@@ -130,7 +129,7 @@ export default function BlogPost() {
   };
 
   const fieldClass = (name) =>
-    `w-full p-3 rounded-lg bg-[#0B132B]/50 border text-white text-sm focus:outline-none focus:ring-2 transition-colors ${
+    `w-full p-3 rounded-lg bg-th-bg/50 border text-th-fg text-sm focus:outline-none focus:ring-2 transition-colors placeholder:text-th-subtle ${
       feedbackErrors[name]
         ? "border-red-500 focus:ring-red-500"
         : "border-[#D4AF37]/20 focus:ring-[#D4AF37]/50"
@@ -138,9 +137,9 @@ export default function BlogPost() {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-[#0B132B] text-white flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-th-bg text-th-fg flex flex-col items-center justify-center gap-4">
         <Navbar />
-        <p className="text-2xl text-gray-400">Blog post not found.</p>
+        <p className="text-2xl text-th-body">Blog post not found.</p>
         <Link to="/blogs" className="text-[#D4AF37] hover:underline">← Back to Blogs</Link>
       </div>
     );
@@ -148,7 +147,7 @@ export default function BlogPost() {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-[#0B132B] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-th-bg text-th-fg flex items-center justify-center">
         <Navbar />
         <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
       </div>
@@ -156,7 +155,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B132B] text-white">
+    <div className="min-h-screen bg-th-bg text-th-fg">
       <Navbar />
 
       <div className="max-w-3xl mx-auto px-6 pt-32 pb-24">
@@ -169,7 +168,7 @@ export default function BlogPost() {
         >
           <Link
             to="/blogs"
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#D4AF37] transition mb-10"
+            className="inline-flex items-center gap-2 text-sm text-th-body hover:text-[#D4AF37] transition mb-10"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -208,11 +207,11 @@ export default function BlogPost() {
             ))}
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-th-fg leading-tight mb-4">
             {blog.title}
           </h1>
 
-          <div className="flex items-center gap-4 text-sm text-gray-500 mb-10 pb-8 border-b border-white/10">
+          <div className="flex items-center gap-4 text-sm text-th-subtle mb-10 pb-8 border-b border-th-fg/10">
             <span>{formatDate(blog.date)}</span>
             <span>·</span>
             <span>{readingTime(blog.body)} min read</span>
@@ -224,7 +223,7 @@ export default function BlogPost() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="text-gray-300 text-lg leading-relaxed whitespace-pre-line"
+          className="text-th-body text-lg leading-relaxed whitespace-pre-line"
         >
           {blog.body}
         </motion.div>
@@ -234,16 +233,16 @@ export default function BlogPost() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-14 pt-8 border-t border-white/10 flex items-center gap-6"
+          className="mt-14 pt-8 border-t border-th-fg/10 flex items-center gap-6"
         >
-          <span className="text-gray-400 text-sm">Was this helpful?</span>
+          <span className="text-th-body text-sm">Was this helpful?</span>
 
           <button
             onClick={() => handleReaction("like")}
             className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
               reaction.userReaction === "like"
                 ? "border-green-400 text-green-400 bg-green-400/10"
-                : "border-white/10 text-gray-400 hover:border-green-400 hover:text-green-400"
+                : "border-th-fg/10 text-th-body hover:border-green-400 hover:text-green-400"
             }`}
           >
             <ThumbsUp size={16} fill={reaction.userReaction === "like" ? "currentColor" : "none"} />
@@ -255,7 +254,7 @@ export default function BlogPost() {
             className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
               reaction.userReaction === "dislike"
                 ? "border-red-400 text-red-400 bg-red-400/10"
-                : "border-white/10 text-gray-400 hover:border-red-400 hover:text-red-400"
+                : "border-th-fg/10 text-th-body hover:border-red-400 hover:text-red-400"
             }`}
           >
             <ThumbsDown size={16} fill={reaction.userReaction === "dislike" ? "currentColor" : "none"} />
@@ -271,7 +270,7 @@ export default function BlogPost() {
           className="mt-12"
         >
           <h3 className="text-xl font-semibold text-[#D4AF37] mb-1">Leave a comment</h3>
-          <p className="text-gray-500 text-sm mb-6">Your feedback comes directly to me. I read every message😊.</p>
+          <p className="text-th-subtle text-sm mb-6">Your feedback comes directly to me. I read every message😊.</p>
 
           <form onSubmit={handleFeedbackSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -335,7 +334,7 @@ export default function BlogPost() {
         </motion.div>
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-white/10 flex justify-center">
+        <div className="mt-16 pt-8 border-t border-th-fg/10 flex justify-center">
           <Link to="/blogs" className="inline-flex items-center gap-2 text-[#D4AF37] hover:underline text-sm">
             ← All Blogs
           </Link>

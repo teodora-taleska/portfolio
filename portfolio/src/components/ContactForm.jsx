@@ -8,7 +8,7 @@ const empty = { from_name: "", to_email: "", title: "", message: "" };
 export default function ContactForm() {
   const [formData, setFormData] = useState(empty);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState(null); // null | "sending" | "success" | "error"
+  const [status, setStatus] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,30 +63,29 @@ export default function ContactForm() {
   };
 
   const fieldClass = (name) =>
-    `p-3 rounded-lg bg-[#0B132B]/50 border text-white focus:outline-none focus:ring-2 transition-colors ${
+    `p-3 rounded-lg bg-th-bg/50 border text-th-fg focus:outline-none focus:ring-2 transition-colors placeholder:text-th-subtle ${
       errors[name]
         ? "border-red-500 focus:ring-red-500"
         : "border-[#D4AF37]/30 focus:ring-[#D4AF37]"
     }`;
 
   return (
-    <section id="contact" className="py-20 px-6 bg-[#0B132B]">
+    <section id="contact" className="py-20 px-6 bg-th-bg">
       <h2 className="text-4xl text-[#D4AF37] font-bold text-center mb-6">
         CONTACT
       </h2>
-      <p className="text-center text-gray-300 mb-10">
+      <p className="text-center text-th-body mb-10">
         Share your ideas, feedback, or collaboration proposals. I'll get back to you!
       </p>
 
       <motion.form
         onSubmit={handleSubmit}
         noValidate
-        className="max-w-xl mx-auto bg-[#1C2541]/40 backdrop-blur-md border border-[#D4AF37]/20 rounded-2xl p-6 flex flex-col gap-4 shadow-lg"
+        className="max-w-xl mx-auto bg-th-card/40 backdrop-blur-md border border-[#D4AF37]/20 rounded-2xl p-6 flex flex-col gap-4 shadow-lg"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Row: name + email — stacks vertically on mobile */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex flex-col gap-1 flex-1">
             <input
@@ -117,7 +116,6 @@ export default function ContactForm() {
           </div>
         </div>
 
-        {/* Subject */}
         <div className="flex flex-col gap-1">
           <input
             type="text"
@@ -132,7 +130,6 @@ export default function ContactForm() {
           )}
         </div>
 
-        {/* Message */}
         <div className="flex flex-col gap-1">
           <textarea
             name="message"

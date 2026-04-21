@@ -30,7 +30,7 @@ export default function BlogSection() {
   );
 
   const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
+  const [direction, setDirection] = useState(1);
   const totalPages = Math.ceil(blogState.length / ITEMS_PER_PAGE);
   const visibleBlogs = blogState.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
@@ -39,7 +39,6 @@ export default function BlogSection() {
     setPage(next);
   };
 
-  // Touch swipe
   const touchStartX = useRef(null);
   const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e) => {
@@ -50,7 +49,6 @@ export default function BlogSection() {
     touchStartX.current = null;
   };
 
-  // Load counts from Supabase on mount
   useEffect(() => {
     blogData.forEach(async (b) => {
       const data = await getReactions(b.id);
@@ -105,17 +103,14 @@ export default function BlogSection() {
     );
   };
 
-  // Note: BlogSection calls saveReactions directly inside the map (not a state updater pattern)
-  // so it's fine here — no StrictMode double-call issue
-
   return (
-    <section id="blogs" className="py-20 px-5 md:px-10 bg-[#121826]">
+    <section id="blogs" className="py-20 px-5 md:px-10 bg-th-sect section-gradient">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
 
         {/* LEFT */}
         <div className="md:w-1/3">
           <h3 className="text-4xl text-[#FFD166] font-bold mb-4">BLOGS</h3>
-          <p className="text-white/80">
+          <p className="text-th-fg/80">
             Thoughts on AI, data systems, and software. From concepts I'm exploring to honest opinions shaped by real experience building things.
           </p>
         </div>
@@ -142,7 +137,7 @@ export default function BlogSection() {
               {visibleBlogs.map((blog) => (
                 <motion.div
                   key={blog.id}
-                  className="group p-6 bg-[#1C2541] rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                  className="group p-6 bg-th-card rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 card-bordered"
                   whileHover={{ scale: 1.03, y: -2 }}
                 >
                   {/* CLICKABLE AREA */}
@@ -150,7 +145,7 @@ export default function BlogSection() {
                     href={blog.link}
                     onClick={() => handleClick(blog.id)}
                     className="block"
-                    target="_blank" // open in new tab
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     <div className="flex justify-between items-start">
@@ -161,16 +156,16 @@ export default function BlogSection() {
                       {blog.link && (
                         <img
                           src="/icons/link.png"
-                          className="w-4 h-4 filter brightness-0 invert opacity-70 group-hover:opacity-100"
+                          className="w-4 h-4 icon-auto-invert opacity-70 group-hover:opacity-100"
                         />
                       )}
                     </div>
 
-                    <p className="text-gray-400 text-sm mt-1">
+                    <p className="text-th-body text-sm mt-1">
                       {blog.date} • {blog.readTime} min read
                     </p>
 
-                    <p className="text-white/70 mt-2">{blog.body.slice(0, 120)}...</p>
+                    <p className="text-th-fg/70 mt-2">{blog.body.slice(0, 120)}...</p>
                   </a>
 
                   {/* TAGS */}
@@ -178,7 +173,7 @@ export default function BlogSection() {
                     {blog.keywords.map((k, i) => (
                       <span
                         key={i}
-                        className="text-xs text-[#FFD166] bg-white/10 px-2 py-1 rounded-full"
+                        className="text-xs text-[#FFD166] bg-th-fg/10 px-2 py-1 rounded-full"
                       >
                         {k}
                       </span>
@@ -186,7 +181,7 @@ export default function BlogSection() {
                   </div>
 
                   {/* INTERACTIONS */}
-                  <div className="mt-4 flex gap-4 items-center text-white/60">
+                  <div className="mt-4 flex gap-4 items-center text-th-fg/60">
                     <button
                       onClick={() => handleReaction(blog.id, "like")}
                       className={`flex items-center gap-1 transition ${
@@ -230,7 +225,7 @@ export default function BlogSection() {
             <button
               onClick={() => goTo(Math.max(0, page - 1))}
               disabled={page === 0}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#FFD166] hover:text-[#FFD166] disabled:opacity-20 disabled:cursor-not-allowed transition"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#FFD166] hover:text-[#FFD166] disabled:opacity-20 disabled:cursor-not-allowed transition"
             >
               <ChevronLeft size={16} />
             </button>
@@ -242,8 +237,8 @@ export default function BlogSection() {
                   onClick={() => goTo(idx)}
                   className={`rounded-full transition-all ${
                     page === idx
-                      ? "w-6 h-3 bg-[#FFD166]"
-                      : "w-3 h-3 bg-white/30 hover:bg-white/60"
+                      ? "w-7 h-3 bg-[#FFD166] shadow-[0_0_8px_rgba(255,209,102,0.7)]"
+                      : "w-3 h-3 bg-[#FFD166]/20 border border-[#FFD166]/50 hover:bg-[#FFD166]/45"
                   }`}
                 />
               ))}
@@ -252,13 +247,13 @@ export default function BlogSection() {
             <button
               onClick={() => goTo(Math.min(totalPages - 1, page + 1))}
               disabled={page === totalPages - 1}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#FFD166] hover:text-[#FFD166] disabled:opacity-20 disabled:cursor-not-allowed transition"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#FFD166] hover:text-[#FFD166] disabled:opacity-20 disabled:cursor-not-allowed transition"
             >
               <ChevronRight size={16} />
             </button>
           </div>
 
-          <p className="text-center text-white/30 text-xs mt-2">
+          <p className="text-center text-th-fg/30 text-xs mt-2">
             {page + 1} / {totalPages}
           </p>
         </div>

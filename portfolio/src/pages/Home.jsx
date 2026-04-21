@@ -28,18 +28,17 @@ const blogs = [
 
 export default function Home() {
   return (
-      <div className="bg-[#0B132B] text-[#EAEAEA] min-h-screen">
-          <Navbar/>
-          <Hero/>
-          <Projects/>
-          <ExperienceSection/>
-          {/*<LanguagesSection/>*/}
-          <BlogSection blogs={blogs}/>
-          <Certificates/>
-          <EducationSection/>
-          <ContactForm/>
-          <Footer/>
-      </div>
-
+    <div className="bg-th-bg text-th-fg min-h-screen">
+      <Navbar />
+      <Hero />
+      <Projects />
+      <ExperienceSection />
+      {/*<LanguagesSection/>*/}
+      <BlogSection blogs={blogs} />
+      <Certificates />
+      <EducationSection />
+      <ContactForm />
+      <Footer />
+    </div>
   );
 }

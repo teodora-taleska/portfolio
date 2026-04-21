@@ -25,7 +25,7 @@ export default function Projects() {
   );
 
   const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
+  const [direction, setDirection] = useState(1);
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const visibleProjects = projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
@@ -34,7 +34,6 @@ export default function Projects() {
     setPage(next);
   };
 
-  // Touch swipe
   const touchStartX = useRef(null);
   const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e) => {
@@ -45,7 +44,6 @@ export default function Projects() {
     touchStartX.current = null;
   };
 
-  // Load counts from Supabase on mount
   useEffect(() => {
     initialProjects.forEach(async (p) => {
       const data = await getReactions(p.id);
@@ -97,13 +95,13 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-20 px-5 md:px-10 bg-[#121826]">
+    <section id="projects" className="py-20 px-5 md:px-10 bg-th-sect section-gradient">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
 
         {/* LEFT */}
         <div className="md:w-1/3">
           <h3 className="text-4xl text-[#D4AF37] font-bold mb-4">PROJECTS</h3>
-          <p className="text-white/80">
+          <p className="text-th-fg/80">
             A selection of projects where I combine data science, machine learning,
             and software engineering to build real-world systems.
           </p>
@@ -131,7 +129,7 @@ export default function Projects() {
               {visibleProjects.map((p) => (
                 <motion.div
                   key={p.id}
-                  className="p-6 bg-[#1C2541] rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                  className="p-6 bg-th-card rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 card-bordered"
                   whileHover={{ scale: 1.03, y: -2 }}
                 >
                   {/* TITLE + LINKS */}
@@ -162,7 +160,7 @@ export default function Projects() {
                           <img
                             src="/icons/github_logo.png"
                             alt="GitHub"
-                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 filter brightness-0 invert"
+                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
                           />
                           <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
                             GitHub
@@ -181,7 +179,7 @@ export default function Projects() {
                           <img
                             src="/icons/youtube.png"
                             alt="YouTube"
-                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 filter brightness-0 invert"
+                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
                           />
                           <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
                             Demo
@@ -197,7 +195,7 @@ export default function Projects() {
                           onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
                           className="relative group flex items-center"
                         >
-                          <Globe size={16} className="text-white opacity-70 group-hover:opacity-100 transition duration-300" />
+                          <Globe size={16} className="text-th-fg opacity-70 group-hover:opacity-100 transition duration-300" />
                           <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
                             Website
                           </span>
@@ -215,7 +213,7 @@ export default function Projects() {
                           <img
                             src="/icons/link.png"
                             alt="Live"
-                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 filter brightness-0 invert"
+                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
                           />
                           <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
                             Live
@@ -225,17 +223,17 @@ export default function Projects() {
                     </h4>
                   </div>
 
-                  <p className="text-white/70 mt-2">{p.desc}</p>
+                  <p className="text-th-fg/70 mt-2">{p.desc}</p>
 
                   <div className="mt-3 flex gap-2 flex-wrap">
                     {p.tech?.map((t, idx) => (
-                      <span key={idx} className="text-xs text-[#FFD700] bg-white/10 px-2 py-1 rounded-full">
+                      <span key={idx} className="text-xs text-[#FFD700] bg-th-fg/10 px-2 py-1 rounded-full">
                         {t}
                       </span>
                     ))}
                   </div>
 
-                  <div className="mt-4 flex gap-4 items-center text-white/60">
+                  <div className="mt-4 flex gap-4 items-center text-th-fg/60">
                     <button
                       onClick={() => handleReaction(p.id, "like")}
                       className={`flex items-center gap-1 transition ${p.userReaction === "like" ? "text-green-400" : "hover:text-green-400"}`}
@@ -263,7 +261,7 @@ export default function Projects() {
             <button
               onClick={() => goTo(Math.max(0, page - 1))}
               disabled={page === 0}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
             >
               <ChevronLeft size={16} />
             </button>
@@ -275,8 +273,8 @@ export default function Projects() {
                   onClick={() => goTo(idx)}
                   className={`rounded-full transition-all ${
                     page === idx
-                      ? "w-6 h-3 bg-[#D4AF37]"
-                      : "w-3 h-3 bg-white/30 hover:bg-white/60"
+                      ? "w-7 h-3 bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.7)]"
+                      : "w-3 h-3 bg-[#D4AF37]/20 border border-[#D4AF37]/50 hover:bg-[#D4AF37]/45"
                   }`}
                 />
               ))}
@@ -285,13 +283,13 @@ export default function Projects() {
             <button
               onClick={() => goTo(Math.min(totalPages - 1, page + 1))}
               disabled={page === totalPages - 1}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
             >
               <ChevronRight size={16} />
             </button>
           </div>
 
-          <p className="text-center text-white/30 text-xs mt-2">
+          <p className="text-center text-th-fg/30 text-xs mt-2">
             {page + 1} / {totalPages}
           </p>
         </div>

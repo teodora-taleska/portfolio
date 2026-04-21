@@ -59,12 +59,12 @@ export default function Blogs() {
   }, [blogs, search, activeKeyword, sort]);
 
   return (
-    <div className="min-h-screen bg-[#0B132B] text-white">
+    <div className="min-h-screen bg-th-bg text-th-fg">
       <Navbar />
 
       {/* Hero banner */}
       <div className="relative pt-32 pb-16 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1C2541] to-[#0B132B] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-th-card to-th-bg pointer-events-none" />
         <div className="absolute inset-0 opacity-10 pointer-events-none"
           style={{ backgroundImage: "radial-gradient(circle at 50% 40%, #D4AF37 0%, transparent 60%)" }}
         />
@@ -80,7 +80,7 @@ export default function Blogs() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative text-gray-400 max-w-xl mx-auto text-lg"
+          className="relative text-th-body max-w-xl mx-auto text-lg"
         >
           Thoughts on AI, data, and software.
         </motion.p>
@@ -96,7 +96,7 @@ export default function Blogs() {
           className="flex flex-col sm:flex-row gap-3 mb-6"
         >
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-th-subtle">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
               </svg>
@@ -106,17 +106,17 @@ export default function Blogs() {
               placeholder="Search by title or keyword…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#1C2541]/60 border border-[#D4AF37]/20 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-th-card/60 border border-[#D4AF37]/20 text-th-fg placeholder:text-th-subtle focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50"
             />
           </div>
 
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="px-4 py-2.5 rounded-xl bg-[#1C2541]/60 border border-[#D4AF37]/20 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-th-card/60 border border-[#D4AF37]/20 text-th-fg focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 cursor-pointer"
           >
             {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value} className="bg-[#1C2541]">
+              <option key={o.value} value={o.value}>
                 {o.label}
               </option>
             ))}
@@ -135,7 +135,7 @@ export default function Blogs() {
             className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
               activeKeyword === null
                 ? "bg-[#D4AF37] text-[#0B132B] border-[#D4AF37]"
-                : "border-[#D4AF37]/30 text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37]"
+                : "border-[#D4AF37]/30 text-th-body hover:border-[#D4AF37] hover:text-[#D4AF37]"
             }`}
           >
             All
@@ -147,7 +147,7 @@ export default function Blogs() {
               className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
                 activeKeyword === kw
                   ? "bg-[#5BC0BE] text-[#0B132B] border-[#5BC0BE]"
-                  : "border-[#5BC0BE]/30 text-gray-400 hover:border-[#5BC0BE] hover:text-[#5BC0BE]"
+                  : "border-[#5BC0BE]/30 text-th-body hover:border-[#5BC0BE] hover:text-[#5BC0BE]"
               }`}
             >
               {kw}
@@ -163,7 +163,7 @@ export default function Blogs() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="text-center text-gray-500 py-20"
+              className="text-center text-th-subtle py-20"
             >
               No blogs match your search.
             </motion.p>
@@ -178,11 +178,10 @@ export default function Blogs() {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link to={`/blogs/${blog.id}`} className="block group mb-5">
-                  <div className="bg-[#1C2541]/50 border border-[#D4AF37]/10 rounded-2xl overflow-hidden hover:border-[#D4AF37]/40 hover:bg-[#1C2541]/80 transition-all duration-300 flex flex-col sm:flex-row">
+                  <div className="bg-th-card/50 border border-[#D4AF37]/10 rounded-2xl overflow-hidden hover:border-[#D4AF37]/40 hover:bg-th-card/80 transition-all duration-300 flex flex-col sm:flex-row">
 
-                    {/* Cover image */}
                     {blog.image && (
-                      <div className="sm:w-48 sm:shrink-0 h-40 sm:h-auto overflow-hidden bg-[#0B132B]/40">
+                      <div className="sm:w-48 sm:shrink-0 h-40 sm:h-auto overflow-hidden bg-th-bg/40">
                         <img
                           src={blog.image}
                           alt={blog.title}
@@ -191,18 +190,17 @@ export default function Blogs() {
                       </div>
                     )}
 
-                    {/* Text */}
                     <div className="p-6 flex flex-col justify-between flex-1">
                       <div>
                         <div className="flex items-start justify-between gap-4">
-                          <h2 className="text-xl font-semibold text-white group-hover:text-[#D4AF37] transition-colors">
+                          <h2 className="text-xl font-semibold text-th-fg group-hover:text-[#D4AF37] transition-colors">
                             {blog.title}
                           </h2>
-                          <span className="shrink-0 text-xs text-gray-500 mt-1">
+                          <span className="shrink-0 text-xs text-th-subtle mt-1">
                             {formatDate(blog.date)}
                           </span>
                         </div>
-                        <p className="text-gray-400 text-sm mt-2 line-clamp-2">
+                        <p className="text-th-body text-sm mt-2 line-clamp-2">
                           {blog.body}
                         </p>
                       </div>
@@ -224,7 +222,7 @@ export default function Blogs() {
                             {kw}
                           </span>
                         ))}
-                        <span className="ml-auto text-xs text-gray-500">
+                        <span className="ml-auto text-xs text-th-subtle">
                           {readingTime(blog.body)} min read
                         </span>
                       </div>

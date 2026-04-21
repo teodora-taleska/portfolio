@@ -18,25 +18,25 @@ export default function ExperienceSection() {
       ],
     },
   ];
- {/* my-32: margin top and margin bottom 8 rem each; py-> top bottom, px; padding left right...*/}
-   return (
+
+  return (
     <section
       ref={sectionRef}
       id="experience"
-      className="flex flex-col md:flex-row gap-12 py-20 px-5 md:px-10 bg-[#1C2541] text-white"
+      className="flex flex-col md:flex-row gap-12 py-20 px-5 md:px-10 bg-th-bg text-th-fg"
     >
       {/* Left side: Experience text */}
       <div className="flex-1">
         <h3 className="text-4xl font-bold mb-10 text-[#D4AF37]">EXPERIENCE</h3>
         <div className="space-y-6">
           {experiences.map((exp, i) => (
-            <div key={i} className="bg-[#121826] p-6 rounded-xl shadow-lg">
+            <div key={i} className="bg-th-card p-6 rounded-xl shadow-lg card-bordered">
               <h4 className="text-xl font-semibold">{exp.role}</h4>
-              <p className="text-white/80">
+              <p className="text-th-fg/80">
                 {exp.company} · {exp.location}
               </p>
-              <p className="text-white/70 mb-2">{exp.duration}</p>
-              <ul className="list-disc list-inside text-white/70">
+              <p className="text-th-fg/70 mb-2">{exp.duration}</p>
+              <ul className="list-disc list-inside text-th-fg/70">
                 {exp.details.map((d, idx) => (
                   <li key={idx}>{d}</li>
                 ))}
