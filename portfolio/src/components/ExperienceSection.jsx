@@ -7,7 +7,7 @@ export default function ExperienceSection() {
   const experiences = [
     {
       role: "Full Stack JavaScript Developer",
-      company: "Digitalni razvoj in programerske rešitve Tadej Hiti s.p.",
+      company: "MLS Invest d.o.o.",
       location: "Ljubljana, Slovenia",
       duration: "Dec 2023 - Sep 2024",
       details: [
