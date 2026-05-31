@@ -6,7 +6,7 @@ export default function ExperienceSection() {
 
   const experiences = [
     {
-      role: "Full Stack JavaScript Developer",
+      role: "Full Stack JavaScript Developer (Student)",
       company: "MLS Invest d.o.o.",
       location: "Ljubljana, Slovenia",
       duration: "Dec 2023 - Sep 2024",

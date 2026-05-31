@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Hero from "../components/Hero";
 import BlogSection from "../components/BlogSection";
 import ExperienceSection from "../components/ExperienceSection";
@@ -27,6 +28,13 @@ const blogs = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    const { hash } = window.location;
+    if (!hash) return;
+    const el = document.querySelector(hash);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   return (
     <div className="bg-th-bg text-th-fg min-h-screen">
       <Navbar />
