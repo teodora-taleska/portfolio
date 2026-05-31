@@ -227,7 +227,7 @@ export default function Projects() {
 
                   <div className="mt-3 flex gap-2 flex-wrap">
                     {p.tech?.map((t, idx) => (
-                      <span key={idx} className="text-xs text-[#FFD700] bg-th-fg/10 px-2 py-1 rounded-full">
+                      <span key={idx} className="tag-gold text-xs text-[#FFD700] bg-th-fg/10 px-2 py-1 rounded-full">
                         {t}
                       </span>
                     ))}

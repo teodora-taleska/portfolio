@@ -68,6 +68,12 @@ body {
     linear-gradient(160deg, rgb(var(--sect)) 0%, rgb(var(--bg)) 100%);
 }
 
+/* ── Tag pills ─────────────────────────────────────────────── */
+[data-theme="light"] .tag-gold {
+  background: #D4AF37;
+  color: #fff;
+}
+
 /* ── Icon helper ───────────────────────────────────────────── */
 .icon-auto-invert {
   filter: brightness(0) invert(1);

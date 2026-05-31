@@ -173,7 +173,7 @@ export default function BlogSection() {
                     {blog.keywords.map((k, i) => (
                       <span
                         key={i}
-                        className="text-xs text-[#FFD166] bg-th-fg/10 px-2 py-1 rounded-full"
+                        className="tag-gold text-xs text-[#FFD166] bg-th-fg/10 px-2 py-1 rounded-full"
                       >
                         {k}
                       </span>
