@@ -32,7 +32,7 @@ export async function saveReactions(id, type, patch) {
     return;
   }
 
-  // No existing row — insert with safe defaults
+  // No existing row - insert with safe defaults
   if (!updated || updated.length === 0) {
     const { error: insertError } = await supabase
       .from("reactions")

@@ -78,7 +78,7 @@ export default function CodeToAppAnimation({ onAnimationComplete }) {
         <div>export default App;</div>
       </motion.div>
 
-      {/* WEB PREVIEW — shifted right so it peeks behind the mobile prototype */}
+      {/* WEB PREVIEW - shifted right so it peeks behind the mobile prototype */}
       <motion.div
         animate={webControls}
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -92,7 +92,7 @@ export default function CodeToAppAnimation({ onAnimationComplete }) {
         />
       </motion.div>
 
-      {/* PROTOTYPE — centered-left */}
+      {/* PROTOTYPE - centered-left */}
       <motion.div
         animate={protoControls}
         initial={{ opacity: 0, x: -150, scale: 0.95 }}

@@ -6,7 +6,7 @@ import { getReactions, saveReactions } from "../lib/supabase.js";
 
 function getReadingTime(text) {
   const words = text.split(" ").length;
-  return Math.ceil(words / 200);
+  return Math.ceil(words / 120);
 }
 function localKey(id) { return `blog_reaction_${id}`; }
 function getUserReaction(id) { return localStorage.getItem(localKey(id)); }
@@ -165,7 +165,7 @@ export default function BlogSection() {
                       {blog.date} • {blog.readTime} min read
                     </p>
 
-                    <p className="text-th-fg/70 mt-2">{blog.body.slice(0, 120)}...</p>
+                    <p className="text-th-fg/70 mt-2">{blog.excerpt}</p>
                   </a>
 
                   {/* TAGS */}

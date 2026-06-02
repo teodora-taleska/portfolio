@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Navbar from "../components/Navbar";
 import { blogs } from "../../public/data/blogs.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
@@ -18,7 +22,7 @@ function formatDate(dateStr) {
 
 function readingTime(body) {
   const words = body.trim().split(/\s+/).length;
-  return Math.max(1, Math.round(words / 200));
+  return Math.max(1, Math.round(words / 120));
 }
 
 function localKey(id) { return `blog_reaction_${id}`; }
@@ -223,9 +227,63 @@ export default function BlogPost() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="text-th-body text-lg leading-relaxed whitespace-pre-line"
+          className="blog-body text-th-body text-lg leading-relaxed"
         >
-          {blog.body}
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code({ inline, className, children }) {
+                const lang = /language-(\w+)/.exec(className || "")?.[1];
+                return !inline && lang ? (
+                  <SyntaxHighlighter style={oneDark} language={lang} PreTag="div" className="rounded-xl my-4 text-sm">
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className="bg-th-card px-1.5 py-0.5 rounded text-[#D4AF37] text-sm font-mono">
+                    {children}
+                  </code>
+                );
+              },
+              img({ src, alt }) {
+                return (
+                  <img src={src} alt={alt} className="rounded-xl my-6 w-full object-cover" />
+                );
+              },
+              h2({ children }) {
+                return <h2 className="text-2xl font-bold text-th-fg mt-10 mb-3">{children}</h2>;
+              },
+              h3({ children }) {
+                return <h3 className="text-xl font-semibold text-th-fg mt-8 mb-2">{children}</h3>;
+              },
+              p({ children }) {
+                return <p className="mb-5">{children}</p>;
+              },
+              ul({ children }) {
+                return <ul className="list-disc list-inside mb-5 space-y-1">{children}</ul>;
+              },
+              ol({ children }) {
+                return <ol className="list-decimal list-inside mb-5 space-y-1">{children}</ol>;
+              },
+              strong({ children }) {
+                return <strong className="text-th-fg font-semibold">{children}</strong>;
+              },
+              table({ children }) {
+                return (
+                  <div className="overflow-x-auto my-6">
+                    <table className="w-full text-sm border-collapse">{children}</table>
+                  </div>
+                );
+              },
+              th({ children }) {
+                return <th className="px-4 py-2 text-left border border-th-fg/10 bg-th-card text-th-fg font-semibold">{children}</th>;
+              },
+              td({ children }) {
+                return <td className="px-4 py-2 border border-th-fg/10 text-th-body">{children}</td>;
+              },
+            }}
+          >
+            {blog.body}
+          </ReactMarkdown>
         </motion.div>
 
         {/* Likes / Dislikes */}

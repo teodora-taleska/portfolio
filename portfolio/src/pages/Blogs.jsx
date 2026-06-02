@@ -19,7 +19,7 @@ function formatDate(dateStr) {
 
 function readingTime(body) {
   const words = body.trim().split(/\s+/).length;
-  return Math.max(1, Math.round(words / 200));
+  return Math.max(1, Math.round(words / 120));
 }
 
 export default function Blogs() {
@@ -201,7 +201,7 @@ export default function Blogs() {
                           </span>
                         </div>
                         <p className="text-th-body text-sm mt-2 line-clamp-2">
-                          {blog.body}
+                          {blog.excerpt || blog.body}
                         </p>
                       </div>
 
