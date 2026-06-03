@@ -6,7 +6,7 @@ import { getReactions, saveReactions } from "../lib/supabase.js";
 
 function getReadingTime(text) {
   const words = text.split(" ").length;
-  return Math.ceil(words / 120);
+  return Math.ceil(words / 200);
 }
 function localKey(id) { return `blog_reaction_${id}`; }
 function getUserReaction(id) { return localStorage.getItem(localKey(id)); }

@@ -45,7 +45,7 @@ HYP:  V1 (57),  II (45),  V6 (27),  III (27), aVR (5)
 
 *Heatmap of salient lead frequency per diagnostic class across 200 curated records. Each cell shows how many times that lead appeared in the per-record top-3 most salient leads. FCN-Wang gradient saliency, 40 records per class, 120 total appearances per class.*
 
-Two things stand out immediately. First, V1 and Lead II dominate across every single class including normal. They are not class-specific. They are the most informationally dense leads in a 12-lead ECG in general, and the model learned to rely on them broadly. Second, there are real class differences underneath that pattern. CD has the strongest single-lead concentration: V1 accounted for 58 percent of all top-3 appearances across CD records, 69 out of 120 slots. That aligns directly with clinical knowledge, since bundle branch block morphology is most visible in V1. MI emphasises inferior leads like III and aVF alongside V1 and V2, which reflects the mix of inferior and anterior infarction patterns in the PTB-XL dataset.
+Two things stand out immediately. First, V1 and Lead II dominate across every single class including normal. They are not class-specific. They are the most informationally dense leads in a 12-lead ECG in general, and the model learned to rely on them broadly. Second, there are real class differences underneath that pattern. CD has the strongest single-lead concentration: V1 accounted for 58% of all top-3 appearances across CD records, 69 out of 120 slots. That aligns directly with clinical knowledge, since bundle branch block morphology is most visible in V1. MI emphasises inferior leads like III and aVF alongside V1 and V2, which reflects the mix of inferior and anterior infarction patterns in the PTB-XL dataset.
 
 The honest finding is not that the model highlights the clinically correct leads. It is that the model relies heavily on the two most diagnostic leads universally, with class-specific signals visible underneath. That is still meaningful. It is just not as clean as the papers make it look.
 
@@ -59,7 +59,7 @@ Integrated Gradients fixes this by accumulating gradients along a path from a ze
 
 The uncertainty estimation was the piece I underestimated most.
 
-I did not want to retrain the model with a Bayesian objective or add Monte Carlo dropout, because the whole point was a model-agnostic approach, something that works on any frozen network without architectural changes. So I implemented test-time augmentation: run 20 forward passes on the same signal, the first clean, the next 19 with small Gaussian noise added at about 2.5 percent of the signal amplitude range. Then compute the standard deviation of the output probabilities across those 20 runs.
+I did not want to retrain the model with a Bayesian objective or add Monte Carlo dropout, because the whole point was a model-agnostic approach, something that works on any frozen network without architectural changes. So I implemented test-time augmentation: run 20 forward passes on the same signal, the first clean, the next 19 with small Gaussian noise added at about 2.5% of the signal amplitude range. Then compute the standard deviation of the output probabilities across those 20 runs.
 
 The non-technical version: show the model the same ECG 20 times, but 19 times with a tiny amount of random static added. If the answer is the same every time, the model is stable. If the probabilities jump around, the model is sitting on a decision boundary and a small change in the signal would change the diagnosis. That is high uncertainty.
 
@@ -96,7 +96,7 @@ For a research demo this is genuinely useful. It makes the output legible to a n
 
 ## So is any of this ready for real use
 
-Gradient saliency on a well-trained convolutional model produces interpretable results that partially align with clinical knowledge. The lead patterns are real, even if V1 and II dominate universally. TTA uncertainty adds information the confidence score alone does not give you. A 90 percent confidence prediction with high TTA variance is a different clinical situation from a 90 percent confidence prediction that is stable under noise. Both of these I would stand behind for a research prototype.
+Gradient saliency on a well-trained convolutional model produces interpretable results that partially align with clinical knowledge. The lead patterns are real, even if V1 and II dominate universally. TTA uncertainty adds information the confidence score alone does not give you. A 90% confidence prediction with high TTA variance is a different clinical situation from a 90% confidence prediction that is stable under noise. Both of these I would stand behind for a research prototype.
 
 The LLM narrative is the piece I am most cautious about. Not because the output is bad, it is often surprisingly good, but because it is easy to over-trust. It sounds authoritative. It uses the right vocabulary. A non-expert reading it could reasonably think the AI understood the ECG, when it understood the numbers you extracted from the ECG.
 

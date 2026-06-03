@@ -19,7 +19,7 @@ function formatDate(dateStr) {
 
 function readingTime(body) {
   const words = body.trim().split(/\s+/).length;
-  return Math.max(1, Math.round(words / 120));
+  return Math.max(1, Math.round(words / 200));
 }
 
 export default function Blogs() {
