@@ -14,6 +14,11 @@ function setUserReaction(id, val) {
 export default function Projects() {
   const ITEMS_PER_PAGE = 3;
 
+  const CATEGORIES = [
+    "All", "ML & AI", "Biosignals", "Full-Stack",
+    "Data Science", "Research", "Creative Coding", "Web Services",
+  ];
+
   const [projects, setProjects] = useState(
     initialProjects.map((p) => ({
       ...p,
@@ -26,12 +31,23 @@ export default function Projects() {
 
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
-  const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
-  const visibleProjects = projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredProjects = activeCategory === "All"
+    ? projects
+    : projects.filter((p) => p.categories?.includes(activeCategory));
+
+  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
+  const visibleProjects = filteredProjects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
   const goTo = (next) => {
     setDirection(next > page ? 1 : -1);
     setPage(next);
+  };
+
+  const handleCategoryChange = (cat) => {
+    setActiveCategory(cat);
+    setPage(0);
   };
 
   const touchStartX = useRef(null);
