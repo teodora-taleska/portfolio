@@ -1,5 +1,7 @@
 import { useRef } from "react";
+import { motion } from "framer-motion";
 import CodeToAppAnimation from "./CodeToAppAnimation.jsx";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 export default function ExperienceSection() {
   const sectionRef = useRef(null);
@@ -27,21 +29,36 @@ export default function ExperienceSection() {
     >
       {/* Left side: Experience text */}
       <div className="flex-1">
-        <h3 className="text-4xl font-bold mb-10 text-[#D4AF37]">EXPERIENCE</h3>
+        <ScrollReveal direction="left">
+          <h3 className="text-4xl font-bold mb-2 text-[#D4AF37]">EXPERIENCE</h3>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+            style={{ originX: 0 }}
+            className="h-[2px] w-12 bg-[#D4AF37] mt-2 mb-10"
+          />
+        </ScrollReveal>
         <div className="space-y-6">
           {experiences.map((exp, i) => (
-            <div key={i} className="bg-th-card p-6 rounded-xl shadow-lg card-bordered">
-              <h4 className="text-xl font-semibold">{exp.role}</h4>
-              <p className="text-th-fg/80">
-                {exp.company} · {exp.location}
-              </p>
-              <p className="text-th-fg/70 mb-2">{exp.duration}</p>
-              <ul className="list-disc list-inside text-th-fg/70">
-                {exp.details.map((d, idx) => (
-                  <li key={idx}>{d}</li>
-                ))}
-              </ul>
-            </div>
+            <ScrollReveal key={i} delay={i * 0.15}>
+              <motion.div
+                className="bg-th-card p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 card-bordered"
+                whileHover={{ scale: 1.02, y: -2 }}
+              >
+                <h4 className="text-xl font-semibold">{exp.role}</h4>
+                <p className="text-th-fg/80">
+                  {exp.company} · {exp.location}
+                </p>
+                <p className="text-th-fg/70 mb-2">{exp.duration}</p>
+                <ul className="list-disc list-inside text-th-fg/70">
+                  {exp.details.map((d, idx) => (
+                    <li key={idx}>{d}</li>
+                  ))}
+                </ul>
+              </motion.div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
