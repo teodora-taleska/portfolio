@@ -119,6 +119,38 @@ body {
 }
 [data-theme="light"] .champagne-blob { display: none; }
 
+/* ── Background drifting circles ───────────────────────────── */
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 231, 206, 0.06);
+  pointer-events: none;
+}
+.circle-1 { width: 700px; height: 700px; top: 3%;  left: -20%; animation: circle-drift-1 25s ease-in-out infinite; }
+.circle-2 { width: 500px; height: 500px; top: 30%; right: -15%; animation: circle-drift-2 32s ease-in-out infinite; }
+.circle-3 { width: 600px; height: 600px; top: 58%; left: 10%;  animation: circle-drift-3 20s ease-in-out infinite; }
+.circle-4 { width: 400px; height: 400px; top: 78%; right: 5%;  animation: circle-drift-4 28s ease-in-out infinite; }
+@keyframes circle-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(50px, -40px) scale(1.05); }
+  66%       { transform: translate(-30px, 60px) scale(0.97); }
+}
+@keyframes circle-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-60px, 40px) scale(0.95); }
+  66%       { transform: translate(40px, -50px) scale(1.04); }
+}
+@keyframes circle-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(40px, -30px) scale(1.06); }
+}
+@keyframes circle-drift-4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-40px, -30px) scale(1.03); }
+  66%       { transform: translate(30px, 40px) scale(0.96); }
+}
+[data-theme="light"] .bg-circle { display: none; }
+
 /* ── Icon helper ───────────────────────────────────────────── */
 .icon-auto-invert {
   filter: brightness(0) invert(1);

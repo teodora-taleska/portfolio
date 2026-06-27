@@ -10,6 +10,7 @@ import Certificates from "../components/Certificates.jsx";
 import ContactForm from "../components/ContactForm.jsx";
 import Footer from "../components/Footer.jsx";
 import FloatingBlobs from "../components/FloatingBlobs.jsx";
+import BackgroundCircles from "../components/BackgroundCircles.jsx";
 
 const blogs = [
   {
@@ -42,6 +43,7 @@ export default function Home() {
       <Hero />
       <div className="relative">
         <FloatingBlobs />
+        <BackgroundCircles />
         <Projects />
         <ExperienceSection />
         {/*<LanguagesSection/>*/}
