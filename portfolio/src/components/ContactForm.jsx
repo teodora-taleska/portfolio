@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
@@ -71,19 +72,30 @@ export default function ContactForm() {
 
   return (
     <section id="contact" className="py-20 px-6 bg-th-bg">
-      <h2 className="text-4xl text-[#D4AF37] font-bold text-center mb-6">
-        CONTACT
-      </h2>
-      <p className="text-center text-th-body mb-10">
-        Share your ideas, feedback, or collaboration proposals. I'll get back to you!
-      </p>
+      <ScrollReveal className="flex flex-col items-center">
+        <h2 className="text-4xl text-[#D4AF37] font-bold text-center mb-2">
+          CONTACT
+        </h2>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+          style={{ originX: 0.5 }}
+          className="h-[2px] w-12 bg-[#D4AF37] mt-2 mb-6"
+        />
+        <p className="text-center text-th-body mb-10">
+          Share your ideas, feedback, or collaboration proposals. I'll get back to you!
+        </p>
+      </ScrollReveal>
 
       <motion.form
         onSubmit={handleSubmit}
         noValidate
         className="max-w-xl mx-auto bg-th-card/40 backdrop-blur-md border border-[#D4AF37]/20 rounded-2xl p-6 flex flex-col gap-4 shadow-lg"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-col sm:flex-row gap-3">
