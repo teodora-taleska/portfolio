@@ -131,6 +131,7 @@ export default function Projects() {
               <button
                 key={cat}
                 onClick={() => handleCategoryChange(cat)}
+                aria-label={`Filter by ${cat}`}
                 className={`px-3 py-1 text-sm rounded-full border transition-all duration-200 ${
                   activeCategory === cat
                     ? "border-[#D4AF37] text-[#D4AF37]"
@@ -150,7 +151,7 @@ export default function Projects() {
             </div>
           ) : (
             <>
-          <AnimatePresence mode="wait" custom={direction}>
+              <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={page}
               custom={direction}
@@ -295,44 +296,44 @@ export default function Projects() {
                 </motion.div>
               ))}
             </motion.div>
-          </AnimatePresence>
+              </AnimatePresence>
 
-          {/* PAGINATION */}
-          <div className="flex items-center justify-center mt-6 gap-4">
-            <button
-              onClick={() => goTo(Math.max(0, page - 1))}
-              disabled={page === 0}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalPages }).map((_, idx) => (
+              {/* PAGINATION */}
+              <div className="flex items-center justify-center mt-6 gap-4">
                 <button
-                  key={idx}
-                  onClick={() => goTo(idx)}
-                  className={`rounded-full transition-all ${
-                    page === idx
-                      ? "w-7 h-3 bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.7)]"
-                      : "w-3 h-3 bg-[#D4AF37]/20 border border-[#D4AF37]/50 hover:bg-[#D4AF37]/45"
-                  }`}
-                />
-              ))}
-            </div>
+                  onClick={() => goTo(Math.max(0, page - 1))}
+                  disabled={page === 0}
+                  className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
+                >
+                  <ChevronLeft size={16} />
+                </button>
 
-            <button
-              onClick={() => goTo(Math.min(totalPages - 1, page + 1))}
-              disabled={page === totalPages - 1}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }).map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => goTo(idx)}
+                      className={`rounded-full transition-all ${
+                        page === idx
+                          ? "w-7 h-3 bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.7)]"
+                          : "w-3 h-3 bg-[#D4AF37]/20 border border-[#D4AF37]/50 hover:bg-[#D4AF37]/45"
+                      }`}
+                    />
+                  ))}
+                </div>
 
-          <p className="text-center text-th-fg/30 text-xs mt-2">
-            {page + 1} / {totalPages}
-          </p>
+                <button
+                  onClick={() => goTo(Math.min(totalPages - 1, page + 1))}
+                  disabled={page === totalPages - 1}
+                  className="w-8 h-8 flex items-center justify-center rounded-full border border-th-fg/20 text-th-fg/60 hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-20 disabled:cursor-not-allowed transition"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+
+              <p className="text-center text-th-fg/30 text-xs mt-2">
+                {page + 1} / {totalPages}
+              </p>
             </>
           )}
         </div>
