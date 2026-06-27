@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 const certificates = [
   { img: "/certificates/claude_code.jpg" },
@@ -67,9 +68,19 @@ export default function Certificates() {
 
   return (
     <section id="certificates" className="py-10 md:py-16 px-4 bg-th-bg relative">
-      <h2 className="text-4xl text-[#D4AF37] font-bold text-center mb-4">
-        CERTIFICATES
-      </h2>
+      <ScrollReveal className="flex flex-col items-center">
+        <h2 className="text-4xl text-[#D4AF37] font-bold text-center mb-2">
+          CERTIFICATES
+        </h2>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+          style={{ originX: 0.5 }}
+          className="h-[2px] w-12 bg-[#D4AF37] mt-2 mb-4"
+        />
+      </ScrollReveal>
 
       <div
         className="relative flex justify-center items-center overflow-hidden"
