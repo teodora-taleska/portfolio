@@ -135,22 +135,25 @@ export default function Projects() {
         {/* RIGHT */}
         <div className="md:w-2/3">
           {/* CATEGORY TABS */}
-          <div className="flex flex-wrap gap-2 mb-6">
+          <ScrollReveal className="flex flex-wrap gap-2 mb-6">
             {CATEGORIES.map((cat) => (
-              <button
+              <motion.button
                 key={cat}
                 onClick={() => handleCategoryChange(cat)}
                 aria-label={`Filter by ${cat}`}
-                className={`px-3 py-1 text-sm rounded-full border transition-all duration-200 ${
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className={`px-3 py-1 text-sm rounded-full border transition-colors duration-200 ${
                   activeCategory === cat
                     ? "border-[#D4AF37] text-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.7)]"
                     : "border-th-fg/20 text-th-fg/50 hover:text-th-fg hover:border-th-fg/40"
                 }`}
               >
                 {cat}
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </ScrollReveal>
 
           {activeCategory === "Web Services" && filteredProjects.length === 0 ? (
             <div className="p-6 bg-th-card rounded-xl shadow-lg card-bordered flex items-center justify-center py-16">
