@@ -1,5 +1,15 @@
 export const projects = [
   {
+    id: "paperless-ngx",
+    title: "Paperless-ngx Contributions",
+    desc: "Open-source group project. My contributions: fixed duplicate detection logic and added unit tests to improve reliability of the document management pipeline.",
+    github: "https://github.com/kq5-vcd/paperless-ngx/commit/fb037056ae9d3f4725f247976e5d313a4251fe25",
+    link: "https://drive.google.com/file/d/1wXIbFhCv6JFA7PNEdnzLrORGVKJxZWPS/view",
+    tech: ["Python", "Django", "Unit Testing"],
+    categories: ["Full-Stack", "Research"],
+    clicks: 0, likes: 0, dislikes: 0, userReaction: null,
+  },
+  {
     id: "player-ltv-studio",
     title: "Player LTV Studio",
     desc: "Educational full-stack project exploring BG/NBD + Gamma-Gamma LTV models, FastAPI, and Next.js. Built in 3 days with Claude Code to learn ML-in-production, marketing analytics, and end-to-end deployment.",
@@ -34,16 +44,6 @@ export const projects = [
     github: "https://github.com/teodora-taleska/kuleuven-archive/tree/main/Biomedical%20data%20processing/Project/Part%202",
     tech: ["Python", "NumPy", "SciPy", "Scikit-learn", "Matplotlib", "Seaborn"],
     categories: ["ML & AI", "Biosignals", "Research"],
-    clicks: 0, likes: 0, dislikes: 0, userReaction: null,
-  },
-  {
-    id: "paperless-ngx",
-    title: "Paperless-ngx Contributions",
-    desc: "Open-source group project. My contributions: fixed duplicate detection logic and added unit tests to improve reliability of the document management pipeline.",
-    github: "https://github.com/kq5-vcd/paperless-ngx/commit/fb037056ae9d3f4725f247976e5d313a4251fe25",
-    link: "https://drive.google.com/file/d/1wXIbFhCv6JFA7PNEdnzLrORGVKJxZWPS/view",
-    tech: ["Python", "Django", "Unit Testing"],
-    categories: ["Full-Stack", "Research"],
     clicks: 0, likes: 0, dislikes: 0, userReaction: null,
   },
   {
