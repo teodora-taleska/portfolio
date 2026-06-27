@@ -125,6 +125,31 @@ export default function Projects() {
 
         {/* RIGHT */}
         <div className="md:w-2/3">
+          {/* CATEGORY TABS */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className={`px-3 py-1 text-sm rounded-full border transition-all duration-200 ${
+                  activeCategory === cat
+                    ? "border-[#D4AF37] text-[#D4AF37]"
+                    : "border-th-fg/20 text-th-fg/50 hover:text-th-fg hover:border-th-fg/40"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {activeCategory === "Web Services" && filteredProjects.length === 0 ? (
+            <div className="p-6 bg-th-card rounded-xl shadow-lg card-bordered flex items-center justify-center py-16">
+              <p className="text-th-fg/50 italic text-sm">
+                Coming soon — client projects launching soon.
+              </p>
+            </div>
+          ) : (
+            <>
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={page}
@@ -308,6 +333,8 @@ export default function Projects() {
           <p className="text-center text-th-fg/30 text-xs mt-2">
             {page + 1} / {totalPages}
           </p>
+            </>
+          )}
         </div>
       </div>
     </section>
