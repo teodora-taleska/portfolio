@@ -9,6 +9,7 @@ import Projects from "../components/Projects.jsx";
 import Certificates from "../components/Certificates.jsx";
 import ContactForm from "../components/ContactForm.jsx";
 import Footer from "../components/Footer.jsx";
+import FloatingBlobs from "../components/FloatingBlobs.jsx";
 
 const blogs = [
   {
@@ -39,14 +40,17 @@ export default function Home() {
     <div className="bg-th-bg text-th-fg min-h-screen">
       <Navbar />
       <Hero />
-      <Projects />
-      <ExperienceSection />
-      {/*<LanguagesSection/>*/}
-      <BlogSection blogs={blogs} />
-      <Certificates />
-      <EducationSection />
-      <ContactForm />
-      <Footer />
+      <div className="relative">
+        <FloatingBlobs />
+        <Projects />
+        <ExperienceSection />
+        {/*<LanguagesSection/>*/}
+        <BlogSection blogs={blogs} />
+        <Certificates />
+        <EducationSection />
+        <ContactForm />
+        <Footer />
+      </div>
     </div>
   );
 }
