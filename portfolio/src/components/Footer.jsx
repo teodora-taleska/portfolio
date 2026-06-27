@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 export default function Footer() {
   return (
     <footer className="bg-th-bg text-th-fg py-10 px-6 text-center">
+      <ScrollReveal delay={0.1}>
       <div className="flex justify-center gap-6 mb-4">
         {/* LinkedIn */}
         <a
@@ -57,6 +59,7 @@ export default function Footer() {
       <p className="text-th-body text-sm">
         © {new Date().getFullYear()} Teodora Taleska. All rights reserved.
       </p>
+      </ScrollReveal>
     </footer>
   );
 }
