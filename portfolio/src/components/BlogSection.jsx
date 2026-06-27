@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { blogs as blogData } from "../../public/data/blogs.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 function getReadingTime(text) {
   const words = text.split(" ").length;
@@ -108,12 +109,20 @@ export default function BlogSection() {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
 
         {/* LEFT */}
-        <div className="md:w-1/3">
-          <h3 className="text-4xl text-[#FFD166] font-bold mb-4">BLOGS</h3>
+        <ScrollReveal direction="left" className="md:w-1/3">
+          <h3 className="text-4xl text-[#FFD166] font-bold mb-2">BLOGS</h3>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+            style={{ originX: 0 }}
+            className="h-[2px] w-12 bg-[#D4AF37] mt-2 mb-4"
+          />
           <p className="text-th-fg/80">
             Thoughts on AI, data systems, and software. From concepts I'm exploring to honest opinions shaped by real experience building things.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* RIGHT */}
         <div className="md:w-2/3">
