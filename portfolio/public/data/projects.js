@@ -15,7 +15,7 @@ export const projects = [
     desc: "Academic research: 12-lead ECG classification on PTB-XL across five diagnostic superclasses. FCN-Wang production model, PEFT fine-tuned Transformers (LoRA/DoRA), gradient saliency explainability, TTA uncertainty, and a four-tab Streamlit clinical demo with Qwen2 narrative generation.",
     github: "https://github.com/teodora-taleska/biosignal-xai",
     web: "https://biosignalxai.streamlit.app/",
-    link: "https://drive.google.com/file/d/11EDzh-9rjApClbfOkL0dfeA4Irc47ZyC/view?usp=sharing",
+    link: "https://drive.google.com/file/d/1NDxIAlqe02CxASbsoKUK7q7Zx2dPWnuK/view?usp=sharing",
     tech: ["Python", "PyTorch", "HuggingFace", "Streamlit", "LoRA/DoRA", "PEFT", "Recharts"],
     categories: ["ML & AI", "Biosignals", "Research", "Data Science"],
     clicks: 0, likes: 0, dislikes: 0, userReaction: null,
