@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 export default function EducationSection() {
   const [modalFile, setModalFile] = useState(null);
@@ -32,7 +33,17 @@ export default function EducationSection() {
 
   return (
     <section id="education" className="py-20 px-4 md:px-6 bg-th-sect section-gradient text-th-fg relative overflow-hidden">
-      <h3 className="text-4xl font-bold mb-16 text-center text-[#D4AF37]">EDUCATION</h3>
+      <ScrollReveal className="flex flex-col items-center">
+        <h3 className="text-4xl font-bold mb-2 text-center text-[#D4AF37]">EDUCATION</h3>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+          style={{ originX: 0.5 }}
+          className="h-[2px] w-12 bg-[#D4AF37] mt-2 mb-14"
+        />
+      </ScrollReveal>
 
       <div className="relative max-w-7xl mx-auto space-y-8">
         {education.map((edu, i) => {
