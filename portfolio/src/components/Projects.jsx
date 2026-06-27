@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import { projects as initialProjects } from "../../public/data/projects.js";
 import { getReactions, saveReactions } from "../lib/supabase.js";
+import ScrollReveal from "./ScrollReveal.jsx";
 
 function localKey(id) { return `project_reaction_${id}`; }
 function getUserReaction(id) { return localStorage.getItem(localKey(id)); }
@@ -115,13 +116,21 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
 
         {/* LEFT */}
-        <div className="md:w-1/3">
-          <h3 className="text-4xl text-[#D4AF37] font-bold mb-4">PROJECTS</h3>
+        <ScrollReveal direction="left" className="md:w-1/3">
+          <h3 className="text-4xl text-[#D4AF37] font-bold mb-2">PROJECTS</h3>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+            style={{ originX: 0 }}
+            className="h-[2px] w-12 bg-[#D4AF37] mt-2 mb-4"
+          />
           <p className="text-th-fg/80">
             A selection of projects where I combine data science, machine learning,
             and software engineering to build real-world systems.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* RIGHT */}
         <div className="md:w-2/3">
@@ -146,7 +155,7 @@ export default function Projects() {
           {activeCategory === "Web Services" && filteredProjects.length === 0 ? (
             <div className="p-6 bg-th-card rounded-xl shadow-lg card-bordered flex items-center justify-center py-16">
               <p className="text-th-fg/50 italic text-sm">
-                Coming soon — client projects launching soon.
+                Coming soon, client projects launching soon.
               </p>
             </div>
           ) : (
