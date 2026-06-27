@@ -152,150 +152,150 @@ export default function Projects() {
           ) : (
             <>
               <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={page}
-              custom={direction}
-              variants={{
-                initial: (d) => ({ x: d * 100, opacity: 0 }),
-                animate: { x: 0, opacity: 1 },
-                exit: (d) => ({ x: d * -100, opacity: 0 }),
-              }}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 gap-6"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-              {visibleProjects.map((p) => (
                 <motion.div
-                  key={p.id}
-                  className="p-6 bg-th-card rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 card-bordered"
-                  whileHover={{ scale: 1.03, y: -2 }}
+                  key={page}
+                  custom={direction}
+                  variants={{
+                    initial: (d) => ({ x: d * 100, opacity: 0 }),
+                    animate: { x: 0, opacity: 1 },
+                    exit: (d) => ({ x: d * -100, opacity: 0 }),
+                  }}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  transition={{ duration: 0.4 }}
+                  className="grid grid-cols-1 gap-6"
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
                 >
-                  {/* TITLE + LINKS */}
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-xl font-semibold text-[#5BC0BE] flex items-center gap-3">
-                      {p.github ? (
-                        <a
-                          href={p.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
-                          className="hover:text-[#D4AF37] transition duration-200"
-                        >
-                          {p.title}
-                        </a>
-                      ) : (
-                        p.title
-                      )}
-
-                      {p.github && (
-                        <a
-                          href={p.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
-                          className="relative group flex items-center"
-                        >
-                          <img
-                            src="/icons/github_logo.png"
-                            alt="GitHub"
-                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
-                          />
-                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
-                            GitHub
-                          </span>
-                        </a>
-                      )}
-
-                      {p.youtube && (
-                        <a
-                          href={p.youtube}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
-                          className="relative group flex items-center"
-                        >
-                          <img
-                            src="/icons/youtube.png"
-                            alt="YouTube"
-                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
-                          />
-                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
-                            Demo
-                          </span>
-                        </a>
-                      )}
-
-                      {p.web && (
-                        <a
-                          href={p.web}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
-                          className="relative group flex items-center"
-                        >
-                          <Globe size={16} className="text-th-fg opacity-70 group-hover:opacity-100 transition duration-300" />
-                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
-                            Website
-                          </span>
-                        </a>
-                      )}
-
-                      {p.link && (
-                        <a
-                          href={p.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
-                          className="relative group flex items-center"
-                        >
-                          <img
-                            src="/icons/link.png"
-                            alt="Live"
-                            className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
-                          />
-                          <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
-                            Live
-                          </span>
-                        </a>
-                      )}
-                    </h4>
-                  </div>
-
-                  <p className="text-th-fg/70 mt-2">{p.desc}</p>
-
-                  <div className="mt-3 flex gap-2 flex-wrap">
-                    {p.tech?.map((t, idx) => (
-                      <span key={idx} className="tag-gold text-xs text-[#FFD700] bg-th-fg/10 px-2 py-1 rounded-full">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 flex gap-4 items-center text-th-fg/60">
-                    <button
-                      onClick={() => handleReaction(p.id, "like")}
-                      className={`flex items-center gap-1 transition ${p.userReaction === "like" ? "text-green-400" : "hover:text-green-400"}`}
+                  {visibleProjects.map((p) => (
+                    <motion.div
+                      key={p.id}
+                      className="p-6 bg-th-card rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 card-bordered"
+                      whileHover={{ scale: 1.03, y: -2 }}
                     >
-                      <ThumbsUp size={16} fill={p.userReaction === "like" ? "currentColor" : "none"} />
-                      <span className="text-xs">{p.likes}</span>
-                    </button>
+                      {/* TITLE + LINKS */}
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xl font-semibold text-[#5BC0BE] flex items-center gap-3">
+                          {p.github ? (
+                            <a
+                              href={p.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                              className="hover:text-[#D4AF37] transition duration-200"
+                            >
+                              {p.title}
+                            </a>
+                          ) : (
+                            p.title
+                          )}
 
-                    <button
-                      onClick={() => handleReaction(p.id, "dislike")}
-                      className={`flex items-center gap-1 transition ${p.userReaction === "dislike" ? "text-red-400" : "hover:text-red-400"}`}
-                    >
-                      <ThumbsDown size={16} fill={p.userReaction === "dislike" ? "currentColor" : "none"} />
-                    </button>
+                          {p.github && (
+                            <a
+                              href={p.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                              className="relative group flex items-center"
+                            >
+                              <img
+                                src="/icons/github_logo.png"
+                                alt="GitHub"
+                                className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
+                              />
+                              <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                                GitHub
+                              </span>
+                            </a>
+                          )}
 
-                    <span className="ml-auto text-xs opacity-50">clicks: {p.clicks}</span>
-                  </div>
+                          {p.youtube && (
+                            <a
+                              href={p.youtube}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                              className="relative group flex items-center"
+                            >
+                              <img
+                                src="/icons/youtube.png"
+                                alt="YouTube"
+                                className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
+                              />
+                              <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                                Demo
+                              </span>
+                            </a>
+                          )}
+
+                          {p.web && (
+                            <a
+                              href={p.web}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                              className="relative group flex items-center"
+                            >
+                              <Globe size={16} className="text-th-fg opacity-70 group-hover:opacity-100 transition duration-300" />
+                              <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                                Website
+                              </span>
+                            </a>
+                          )}
+
+                          {p.link && (
+                            <a
+                              href={p.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => { e.stopPropagation(); handleLinkClick(p.id); }}
+                              className="relative group flex items-center"
+                            >
+                              <img
+                                src="/icons/link.png"
+                                alt="Live"
+                                className="w-4 h-4 opacity-70 group-hover:opacity-100 transition duration-300 icon-auto-invert"
+                              />
+                              <span className="absolute left-1/2 -translate-x-1/2 top-[-28px] text-xs bg-black/80 px-2 py-1 rounded text-white opacity-0 group-hover:opacity-100 transition">
+                                Live
+                              </span>
+                            </a>
+                          )}
+                        </h4>
+                      </div>
+
+                      <p className="text-th-fg/70 mt-2">{p.desc}</p>
+
+                      <div className="mt-3 flex gap-2 flex-wrap">
+                        {p.tech?.map((t, idx) => (
+                          <span key={idx} className="tag-gold text-xs text-[#FFD700] bg-th-fg/10 px-2 py-1 rounded-full">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="mt-4 flex gap-4 items-center text-th-fg/60">
+                        <button
+                          onClick={() => handleReaction(p.id, "like")}
+                          className={`flex items-center gap-1 transition ${p.userReaction === "like" ? "text-green-400" : "hover:text-green-400"}`}
+                        >
+                          <ThumbsUp size={16} fill={p.userReaction === "like" ? "currentColor" : "none"} />
+                          <span className="text-xs">{p.likes}</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleReaction(p.id, "dislike")}
+                          className={`flex items-center gap-1 transition ${p.userReaction === "dislike" ? "text-red-400" : "hover:text-red-400"}`}
+                        >
+                          <ThumbsDown size={16} fill={p.userReaction === "dislike" ? "currentColor" : "none"} />
+                        </button>
+
+                        <span className="ml-auto text-xs opacity-50">clicks: {p.clicks}</span>
+                      </div>
+                    </motion.div>
+                  ))}
                 </motion.div>
-              ))}
-            </motion.div>
               </AnimatePresence>
 
               {/* PAGINATION */}
