@@ -1,5 +1,26 @@
 export const projects = [
   {
+    id: "lumina",
+    title: "Lumina — Progress Tracker",
+    desc: "Personal wellness and progress tracking app that brings habits, mood, workouts, goals, and thoughts together in one distraction-free space. Built for people who want to build better routines without the noise.",
+    web: "https://lumina-three-amber.vercel.app",
+    github: null,
+    tech: ["Next.js 14", "Supabase", "Tailwind CSS", "Framer Motion", "Recharts", "Zustand", "TypeScript"],
+    categories: ["Full-Stack"],
+    clicks: 0, likes: 0, dislikes: 0, userReaction: null,
+  },
+  {
+    id: "biosignal-xai",
+    title: "BioSignal-XAI",
+    desc: "Academic research: 12-lead ECG classification on PTB-XL across five diagnostic superclasses. FCN-Wang production model, PEFT fine-tuned Transformers (LoRA/DoRA), gradient saliency explainability, TTA uncertainty, and a four-tab Streamlit clinical demo with Qwen2 narrative generation.",
+    github: "https://github.com/teodora-taleska/biosignal-xai",
+    web: "https://biosignalxai.streamlit.app/",
+    link: "https://drive.google.com/file/d/11EDzh-9rjApClbfOkL0dfeA4Irc47ZyC/view?usp=sharing",
+    tech: ["Python", "PyTorch", "HuggingFace", "Streamlit", "LoRA/DoRA", "PEFT", "Recharts"],
+    categories: ["ML & AI", "Biosignals", "Research", "Data Science"],
+    clicks: 0, likes: 0, dislikes: 0, userReaction: null,
+  },
+  {
     id: "paperless-ngx",
     title: "Paperless-ngx Contributions",
     desc: "Open-source group project. My contributions: fixed duplicate detection logic and added unit tests to improve reliability of the document management pipeline.",
