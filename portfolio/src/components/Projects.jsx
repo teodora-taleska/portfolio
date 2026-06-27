@@ -134,7 +134,7 @@ export default function Projects() {
                 aria-label={`Filter by ${cat}`}
                 className={`px-3 py-1 text-sm rounded-full border transition-all duration-200 ${
                   activeCategory === cat
-                    ? "border-[#D4AF37] text-[#D4AF37]"
+                    ? "border-[#D4AF37] text-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.7)]"
                     : "border-th-fg/20 text-th-fg/50 hover:text-th-fg hover:border-th-fg/40"
                 }`}
               >
