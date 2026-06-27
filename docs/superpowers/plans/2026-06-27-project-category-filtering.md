@@ -263,7 +263,7 @@ Wrap the existing `<AnimatePresence>` block and the pagination `<div>` + page co
 {activeCategory === "Web Services" && filteredProjects.length === 0 ? (
   <div className="p-6 bg-th-card rounded-xl shadow-lg card-bordered flex items-center justify-center py-16">
     <p className="text-th-fg/50 italic text-sm">
-      Coming soon — client projects launching soon.
+      Coming soon, client projects launching soon.
     </p>
   </div>
 ) : (
