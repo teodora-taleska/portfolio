@@ -1,5 +1,297 @@
 export const blogs = [
   {
+    id: "abcde-heartbert-ecg-encoding",
+    title: "ABCDE Is Not a Spelling Error. It's Your Heart.",
+    image: "/blog-covers/abcde-heartbert.jpg",
+    excerpt: "I fed an ECG signal to a language model. Not as numbers. As a sentence made of letters. Here is the trick that made it work.",
+    body: `Here is a string of text produced by my code when I hand it a 10-second ECG recording:
+ 
+\`\`\`
+B C D E H K M N N M K H E D C B A
+A B C E H L O P P O L H E C B A
+A B C F J M P R R P M J F C B A
+A B C E H K M N N M K H D B A
+\`\`\`
+ 
+That is not a typo. It is not corrupted output. It is a patient's heartbeat, encoded as a sentence, ready to be fed into a language model that was pretrained on text.
+ 
+This is the core trick behind HeartBERT, a model I adapted for ECG classification as part of my BioSignal-XAI project. And once you understand how it works, it is one of those ideas that sounds almost too simple to be real.
+ 
+## Why encode a waveform as text at all
+ 
+The ECG signal is a time series. It is 1000 floating-point numbers sampled at 100 Hz, ten seconds of electrical activity from the heart, per lead. The natural thing to do with it is feed it into a convolutional network or a transformer that accepts raw tensors.
+ 
+But HeartBERT is a RoBERTa model. It was pretrained on electrocardiogram descriptions written in natural language. Its weights know how to process tokens. Not floats. Tokens.
+ 
+So the question becomes: how do you turn 1000 floats into something a tokenizer can digest without losing the shape of the signal?
+ 
+The answer is quantisation into letters.
+ 
+## The five lines that do everything
+ 
+\`\`\`python
+def _ecg_to_text(signal: np.ndarray, n_bins: int = 32) -> str:
+    bins    = np.linspace(signal.min(), signal.max(), n_bins)
+    indices = np.digitize(signal, bins).clip(0, n_bins - 1)
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    return " ".join(letters[i] for i in indices)
+\`\`\`
+ 
+That is the entire encoding. Five lines. Here is what each one does.
+ 
+**\`np.linspace(signal.min(), signal.max(), n_bins)\`** divides the amplitude range of the signal into 32 equally spaced breakpoints. If the signal goes from −0.4 mV to +1.6 mV, the bins cover that 2.0 mV range in steps of about 0.063 mV each.
+ 
+**\`np.digitize(signal, bins)\`** assigns each of the 1000 time samples to the bin it falls into. A sample near the bottom of the amplitude range gets index 0 or 1. A sample at a peak, an R-wave spike, gets index 28, 29, 30.
+ 
+**\`.clip(0, n_bins - 1)\`** handles the edge case where a sample lands exactly on the boundary and digitize returns an out-of-range index.
+ 
+**The letters string** maps each bin index to a character. Index 0 → 'A'. Index 25 → 'Z'. Index 26 → 'a'. Index 31 → 'f'. The heart at rest, near baseline, produces letters in the A–E range. An R-peak, the sharp spike that marks each heartbeat, jumps to letters like N, P, R.
+ 
+**\`" ".join(...)\`** produces the final string with spaces between every letter, so the RoBERTa tokenizer treats each one as a separate token.
+ 
+## What the signal actually looks like as text
+ 
+Take a single Lead II recording, the most diagnostic single-lead view of the heart, from a healthy patient. The baseline hovers around zero. The P-wave, a small pre-beat bump, nudges the letter up to D or E. Then the R-peak, the tall sharp spike, fires the letter up to N or O. The S-wave immediately after drops it back to B. The T-wave, a gentler recovery hump, brings it up to G or H before settling back to baseline.
+ 
+So a single heartbeat looks something like:
+ 
+\`\`\`
+A B C D E D C B A B D H N O N H D B A B D G H G D B A
+\`\`\`
+ 
+And an entire 10-second recording, with 8–10 heartbeats in it, produces roughly 1000 letters, one per 10 ms sample.
+ 
+The shape of the signal is preserved. Not as exact floating-point values, but as the relative rhythm of letters rising and falling. A language model that has seen thousands of such strings during pretraining learns that the pattern \`A B D H N O N H D B\` is a heartbeat. That \`A A A A A\` for a long stretch might be a flat section or noise. That unusual patterns in the letters, high letters where there should be low ones, or erratic jumps, correspond to pathology.
+ 
+## Into the tokenizer
+ 
+Once the signal is text, it goes through the standard RoBERTa tokenizer:
+ 
+\`\`\`python
+def _encode(self, X: np.ndarray) -> dict:
+    texts = [_ecg_to_text(x) for x in X]
+    return self.tokenizer(
+        texts,
+        padding        = True,
+        truncation     = True,
+        max_length     = 512,
+        return_tensors = "pt",
+    )
+\`\`\`
+ 
+The tokenizer adds a \`[CLS]\` token at the start and a \`[SEP]\` token at the end. That leaves 510 slots for the ECG letters. Since we have 1000 samples but only 510 available token positions, about the last 490 samples of the 10-second signal get truncated. In practice this covers roughly the first 5 seconds of the recording, enough to capture 4–6 complete heartbeats, which is sufficient for classification.
+ 
+## Fine-tuning with LoRA
+ 
+HeartBERT has about 125 million parameters. Fine-tuning all of them for ECG classification would be expensive and prone to catastrophic forgetting of the ECG pretraining. Instead I used LoRA (Low-Rank Adaptation) which adds a small pair of low-rank matrices to the attention layers and freezes everything else.
+ 
+\`\`\`python
+cfg = LoraConfig(
+    task_type      = TaskType.SEQ_CLS,
+    r              = 16,
+    lora_alpha     = 32,
+    lora_dropout   = 0.1,
+    target_modules = ["query", "value"],
+    bias           = "none",
+)
+\`\`\`
+ 
+With rank \`r=16\`, the adapters add roughly 1.2 million trainable parameters out of 125 million total. That is less than 1% of the model. The original HeartBERT weights stay frozen. Only the low-rank deltas learn the PTB-XL classification task.
+ 
+The intuition for why this works: the pretrained model already understands the structure of ECG-as-text. The LoRA adapters teach it to apply that understanding to a specific five-class label space (NORM, MI, STTC, CD, HYP) rather than whatever task it was originally trained for.
+ 
+## What the model actually attends to
+ 
+After training, you can ask the model what part of the ECG sentence it looked at most when making its prediction. RoBERTa's attention mechanism produces a weight for each token in the sequence. The \`[CLS]\` token, which aggregates the full sequence for the classification head, attends to the tokens that mattered most.
+ 
+\`\`\`python
+def get_attention_weights(self, x: np.ndarray) -> tuple:
+    enc = {k: v.to(self.device) for k, v in self._encode(x[np.newaxis]).items()}
+    out = self.model(**enc, output_attentions=True)
+    last_layer = out.attentions[-1]        # (1, num_heads, seq_len, seq_len)
+    avg_heads  = last_layer[0].mean(dim=0) # (seq_len, seq_len)
+    cls_attn   = avg_heads[0].cpu().numpy()  # CLS row → (seq_len,)
+    ecg_attn   = cls_attn[1:-1]             # drop CLS and SEP tokens
+    ecg_attn   = ecg_attn / (ecg_attn.max() + 1e-8)
+    return np.arange(len(ecg_attn)), ecg_attn
+\`\`\`
+ 
+The last transformer layer, averaged across all attention heads, gives you a vector of weights over the 510 ECG letter tokens. Plotting those weights over the original waveform shows you which part of the signal the model was reading most carefully.
+ 
+![HeartBERT CLS attention weights overlaid on Lead II signal for a correctly predicted MI record](/blog-images/heartbert-attention-mi.png)
+ 
+*HeartBERT CLS attention weights overlaid on Lead II for a correctly predicted MI record. Higher opacity indicates higher attention. The model concentrated on the ST-segment region between the S-wave and T-wave; the exact region where ST elevation appears in myocardial infarction. True label: MI. Predicted: MI. Confidence: 0.81.*
+ 
+For MI records, the model consistently attends to the ST segment, the region between the end of the QRS complex and the start of the T-wave where ST elevation is the primary diagnostic feature. For CD (conduction disorders), it tends to attend to the QRS complex itself, which widens in bundle branch block. This is not guaranteed clinical correctness, it is an observation about what a 125M-parameter model learned from text-encoded ECG data. But the fact that the attended regions are clinically plausible is reassuring.
+ 
+## The honest trade-offs
+ 
+Encoding ECG as text is a creative constraint, not a free lunch.
+ 
+The 510-token limit covers only the first 5 seconds of a 10-second recording. For an arrhythmia that occurs at second 7, the model never sees it. ECGPTClassifier and HuBERTECGClassifier, which take raw tensors as input, work with the full 10-second signal.
+ 
+The quantisation into 32 bins also loses information. Two samples that are 0.01 mV apart but happen to straddle a bin boundary get different letters. Two samples that are 0.06 mV apart but fall in the same bin get the same letter. The exact amplitude values that matter clinically, the precise height of an ST segment elevation, measured in millivolts, are rounded to the nearest bin.
+ 
+And the tokenizer introduces another layer of indirection. A space-separated string of letters is not the natural format for ECG data. The model is doing more work than a network that receives a float tensor directly.
+ 
+What it gains in return: HeartBERT pretraining, which gave the model weights that already understand ECG patterns expressed as language. Whether that pretraining advantage outweighs the information losses is an empirical question, and exactly the kind of thing the model comparison notebook in this project is designed to answer.
+ 
+## Try it yourself
+ 
+If you want to see the encoding and attention overlay on a real PTB-XL record, the interactive demo is live at [biosignalxai.streamlit.app](https://biosignalxai.streamlit.app). Open the Interactive Demo tab, pick a record from the curated test set, and you can see the attention weights overlaid on the signal alongside the classification result.
+ 
+<iframe src="https://biosignalxai.streamlit.app/?embed=true" width="100%" height="600" frameborder="0" style="border-radius:8px;border:1px solid #e0e0e0;"></iframe>
+ 
+Model selection is not available in the demo yet, for now, all records run through the default model. That part is coming. What you can already see is the attention weight overlay on the signal, which shows which regions of the ECG the model focused on when making its decision.
+`,
+    date: "2026-07-15",
+    keywords: ["AI", "Deep Learning", "ECG", "NLP", "HeartBERT"],
+    link: "/blogs/abcde-heartbert-ecg-encoding",
+  },
+  {
+    id: "the-sound-of-a-diagnosis",
+    title: "The Sound of a Diagnosis",
+    image: "/blog-covers/sound-of-diagnosis.jpg",
+    excerpt: "There is no audio file in this project. No .mp3, no .wav. Just two sine waves, an exponential decay, and a BPM that changes when something is wrong.",
+    body: `The BioSignal-XAI project has a live demo at [biosignalxai.streamlit.app](https://biosignalxai.streamlit.app). Open the Interactive Demo tab, pick a record from the curated test set, run the model, and there is a Play heartbeat button. Most people click it expecting a recording. What they get instead is a sound that the browser generates on the spot, and that changes depending on what the model found in the signal.
+
+There is no audio file anywhere in this project. No .mp3, no .wav, no recorded heartbeat sound. The heartbeat you hear when you click Play in the live demo is synthesized entirely in the browser, in real time, from math.
+
+Here is how it works, and why it sounds the way it does.
+ 
+## The Web Audio API and why it is the right tool
+ 
+The Web Audio API is built into every modern browser. It gives you a graph of audio nodes (sources, effects, outputs) that you can wire together and schedule with sample-accurate timing. No libraries. No server calls. Just the browser and JavaScript.
+ 
+The relevant node types here are two: the \`OscillatorNode\`, which generates a pure tone at a given frequency, and the \`GainNode\`, which controls the volume of whatever passes through it. A heartbeat sound is, at its core, two thumps in quick succession, the lub and the dub. Each thump is a brief burst of low-frequency sound that decays quickly. Which means each one is an oscillator running through a gain node whose volume drops fast.
+ 
+\`\`\`javascript
+function beat(ctx, startTime, freq, dur, vol) {
+  var osc  = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(vol, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + dur + 0.05);
+}
+\`\`\`
+ 
+This \`beat()\` function is the entire synthesis engine. Everything else is parameters and timing.
+ 
+## Why exponential decay and not linear
+ 
+The line that matters most is this one:
+ 
+\`\`\`javascript
+gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur);
+\`\`\`
+ 
+The gain starts at the volume you set (say, 0.25) and ramps down to 0.0001 (essentially silence) over the duration \`dur\`. The ramp is exponential, not linear.
+ 
+Linear decay would sound wrong. Human perception of loudness is logarithmic: a sound at half the amplitude does not sound half as loud, it sounds roughly 6 dB quieter, which our ears experience as a smaller change. A linear volume ramp sounds like the sound cuts off abruptly at the end rather than fading naturally. An exponential ramp follows the curve of how we actually hear. The sound falls off the way a real physical impact does, fast at first, then tapering.
+ 
+The mathematical model is:
+ 
+$$G(t) = G_0 \\cdot e^{-\\lambda t}$$
+ 
+where $G_0$ is the starting gain, $t$ is time in seconds, and $\\lambda$ is the decay rate. A higher $\\lambda$ means a sharper, shorter thump. A lower $\\lambda$ means a rounder, longer tone.
+ 
+The Web Audio API does not expose $\\lambda$ directly. You specify the target value and the time to reach it, and the browser computes the curve. Setting the target to 0.0001 (rather than 0) is intentional, \`exponentialRampToValueAtTime\` requires a non-zero target, because a true exponential never actually reaches zero.
+ 
+## The lub and the dub
+ 
+A normal heartbeat is not one sound. It is two: the "lub" (S1) and the "dub" (S2). S1 is the sound of the mitral and tricuspid valves closing at the start of ventricular contraction. S2 is the aortic and pulmonic valves closing at the end. They happen in quick succession, separated by a short gap, with a longer pause before the next cycle.
+ 
+In the synthesis, S1 and S2 are two separate \`beat()\` calls scheduled slightly apart:
+ 
+\`\`\`javascript
+var now = ctx.currentTime;
+beat(ctx, now,              freq1, dur1, volume);  // lub (S1)
+beat(ctx, now + gap,        freq2, dur2, volume);  // dub (S2)
+\`\`\`
+ 
+For a normal sinus rhythm:
+ 
+\`\`\`javascript
+freq1: 80,   // Hz — S1 frequency
+freq2: 100,  // Hz — S2 frequency (slightly higher)
+dur1:  0.08, // seconds — S1 duration
+dur2:  0.06, // seconds — S2 shorter, sharper
+gap:   0.12, // seconds — time between S1 and S2
+bpm:   62    // beats per minute
+\`\`\`
+ 
+S1 is slightly lower pitched than S2, and slightly longer. This matches the acoustics of real heart sounds as recorded with a stethoscope. The difference is subtle, 80 Hz vs 100 Hz, but it is enough to give the sound the characteristic double-beat quality rather than two identical thumps.
+ 
+## How the anomaly changes the sound
+ 
+When the model detects an anomaly: MI, STTC, CD, or HYP the parameters shift:
+ 
+\`\`\`javascript
+freq1: 140,  // Hz — higher, sharper
+freq2: 170,  // Hz
+dur1:  0.06, // shorter
+dur2:  0.05,
+gap:   0.08, // tighter gap between lub and dub
+bpm:   78    // faster
+\`\`\`
+ 
+The frequency goes up from 80/100 Hz to 140/170 Hz. The individual beat durations shorten. The gap between S1 and S2 tightens. And the BPM increases from 62 to 78.
+ 
+The result is a sound that is perceptibly more urgent. Not because the code is trying to be dramatic, but because these parameter changes reflect real physiological patterns. Pathological heart sounds tend to be higher pitched, shorter, and more rapid than normal sinus rhythm. The synthesis is a rough approximation of that relationship.
+ 
+This is not a diagnostic audio tool. A clinician cannot use this to identify MI from the sound. What it does is give a non-expert user a fast, immediate, visceral sense that the classification result has changed, that this record is different from the last one.
+ 
+## Connecting the BPM to the ECG
+ 
+The BPM in the audio component is hardcoded at 62 for normal and 78 for anomaly. But the actual BPM of the ECG record you are listening to can be computed directly from the signal.
+ 
+R-peaks, the tall spikes that mark each heartbeat, can be detected by finding local maxima in Lead II above a threshold:
+ 
+\`\`\`python
+from scipy.signal import find_peaks
+ 
+lead_ii = signal[:, 1]                    # Lead II, 1000 samples at 100 Hz
+peaks, _ = find_peaks(
+    lead_ii,
+    height    = lead_ii.mean() + 0.5 * lead_ii.std(),
+    distance  = 50,                       # at least 0.5 s between peaks
+)
+rr_intervals = np.diff(peaks) / 100.0    # convert samples to seconds
+bpm = 60.0 / rr_intervals.mean()         # average BPM
+\`\`\`
+ 
+In the PTB-XL dataset, normal records average around 62–72 BPM. Tachycardic records (fast heart rate) sit above 100. Bradycardic records fall below 60. The synthesized audio uses 62 and 78 as representative values for the two states, not the exact BPM of each individual record.
+ 
+A more precise version would compute the actual RR intervals from the signal, extract the true BPM, and pass that into the audio synthesis. That is a straightforward extension, and one that would make the playback genuinely patient-specific rather than class-representative.
+ 
+## Why this matters more than it seems
+ 
+The heartbeat sound is one of the least technically complex things in this project. It is about 30 lines of JavaScript. The XAI pipeline, the PEFT training, the uncertainty estimation, all of those are harder.
+ 
+But in user testing, it was the feature people noticed most. They would run the demo on a normal record, hear the steady low beat, then run it on an MI record, hear the higher faster rhythm, and something clicked that did not click from reading confidence scores. The number \`0.86\` for MI is information. The shift in sound is experience.
+ 
+Explainability tools in clinical AI spend a lot of time trying to make model outputs legible to non-experts. Saliency maps, attention weights, probability bars, these are all designed for people who know how to read them. Audio is different. It bypasses the visual interpretation layer entirely. You hear that something is different before you process why.
+ 
+That is worth something, even if the science behind the two-oscillator synthesis is rudimentary. The goal is not acoustic accuracy. It is perceptual immediacy.
+ 
+## Try it yourself
+ 
+The demo is live at [biosignalxai.streamlit.app](https://biosignalxai.streamlit.app). Open any record in the Interactive Demo tab, run the analysis, and click Play heartbeat. Then pick a different record from a different class and do the same. The change in sound is immediate.
+ 
+<iframe src="https://biosignalxai.streamlit.app/?embed=true" width="100%" height="600" frameborder="0" style="border-radius:8px;border:1px solid #e0e0e0;"></iframe>
+ 
+No audio files. No recordings. Two sine waves, a gap, and an exponential ramp. That is all a heartbeat needs to be.`,
+    date: "2026-06-27",
+    keywords: ["AI", "ECG", "Web Audio API", "JavaScript", "Clinical AI"],
+    link: "/blogs/the-sound-of-a-diagnosis",
+  },
+
+    {
     id: "explainable-ai-practice",
     title: "What Explainable AI Actually Looks Like in Practice",
     image: "/blog-covers/explainable-ai-practice.jpg",
