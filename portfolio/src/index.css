@@ -151,6 +151,24 @@ body {
 }
 [data-theme="light"] .bg-circle { display: none; }
 
+/* ── Blog body links ───────────────────────────────────────── */
+.blog-body a {
+  color: #D4AF37;
+  text-decoration: none;
+  background-image: linear-gradient(#D4AF37, #D4AF37);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.3s ease, color 0.2s ease;
+}
+.blog-body a:hover {
+  background-size: 100% 1px;
+}
+[data-theme="light"] .blog-body a {
+  color: #9b7600;
+  background-image: linear-gradient(#9b7600, #9b7600);
+}
+
 /* ── Icon helper ───────────────────────────────────────────── */
 .icon-auto-invert {
   filter: brightness(0) invert(1);

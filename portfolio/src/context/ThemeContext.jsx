@@ -18,6 +18,14 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === "theme") setIsDark(e.newValue === "dark");
+    };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
+
   return (
     <ThemeContext.Provider value={{ isDark, toggle: () => setIsDark((d) => !d) }}>
       {children}

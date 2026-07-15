@@ -264,6 +264,13 @@ export default function BlogPost() {
               ol({ children }) {
                 return <ol className="list-decimal list-inside mb-5 space-y-1">{children}</ol>;
               },
+              a({ href, children }) {
+                return (
+                  <a href={href} target="_blank" rel="noopener noreferrer">
+                    {children}
+                  </a>
+                );
+              },
               strong({ children }) {
                 return <strong className="text-th-fg font-semibold">{children}</strong>;
               },
