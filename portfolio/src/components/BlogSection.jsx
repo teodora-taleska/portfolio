@@ -220,9 +220,9 @@ export default function BlogSection() {
                       />
                     </button>
 
-                    <span className="ml-auto text-xs opacity-50">
-                      clicks: {blog.clicks}
-                    </span>
+                    {/*<span className="ml-auto text-xs opacity-50">*/}
+                    {/*  clicks: {blog.clicks}*/}
+                    {/*</span>*/}
                   </div>
                 </motion.div>
               ))}

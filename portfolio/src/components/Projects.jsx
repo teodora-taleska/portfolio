@@ -17,8 +17,10 @@ export default function Projects() {
 
   const CATEGORIES = [
     "All", "ML & AI", "Biosignals", "Full-Stack",
-    "Data Science", "Research", "Creative Coding", "Web Services",
+    "Data Science", "Research", "Creative Coding", "Web Services", "Data Solutions",
   ];
+
+  const COMING_SOON_CATEGORIES = new Set(["Web Services", "Data Solutions"]);
 
   const [projects, setProjects] = useState(
     initialProjects.map((p) => ({
@@ -155,10 +157,10 @@ export default function Projects() {
             ))}
           </ScrollReveal>
 
-          {activeCategory === "Web Services" && filteredProjects.length === 0 ? (
+          {COMING_SOON_CATEGORIES.has(activeCategory) && filteredProjects.length === 0 ? (
             <div className="p-6 bg-th-card rounded-xl shadow-lg card-bordered flex items-center justify-center py-16">
               <p className="text-th-fg/50 italic text-sm">
-                Coming soon, client projects launching soon.
+                Coming soon.
               </p>
             </div>
           ) : (
