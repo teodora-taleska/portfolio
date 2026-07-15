@@ -169,6 +169,10 @@ body {
   background-image: linear-gradient(#9b7600, #9b7600);
 }
 
+/* ── KaTeX math rendering ──────────────────────────────────── */
+.blog-body .katex { color: rgb(var(--fg)); font-size: 1em; }
+.blog-body .katex-display { overflow-x: auto; margin: 1.5rem 0; }
+
 /* ── Icon helper ───────────────────────────────────────────── */
 .icon-auto-invert {
   filter: brightness(0) invert(1);
