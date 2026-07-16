@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "./ScrollReveal.jsx";
 
 const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
@@ -10,6 +10,7 @@ export default function ContactForm() {
   const [formData, setFormData] = useState(empty);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -170,7 +171,84 @@ export default function ContactForm() {
         {status === "error" && (
           <p className="text-center text-red-400 mt-1">Something went wrong. Please try again.</p>
         )}
+
+        <button
+          type="button"
+          onClick={() => setShowPrivacy(true)}
+          className="text-center text-th-subtle text-xs mt-1 underline hover:text-[#D4AF37] transition-colors"
+        >
+          How is my data handled?
+        </button>
       </motion.form>
+
+      {/* Privacy Policy Modal */}
+      <AnimatePresence>
+        {showPrivacy && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowPrivacy(false)}
+          >
+            <div
+              className="bg-th-card w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden relative flex flex-col"
+              style={{ maxHeight: "85vh" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center px-6 py-4 border-b border-[#D4AF37]/20 shrink-0">
+                <h4 className="text-lg font-bold text-[#D4AF37]">How your data is handled</h4>
+                <button
+                  className="text-th-fg text-2xl font-bold leading-none"
+                  onClick={() => setShowPrivacy(false)}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="px-6 py-5 overflow-y-auto text-th-body text-sm leading-relaxed space-y-3">
+                <p>
+                  This contact form is processed by{" "}
+                  <a
+                    href="https://web3forms.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-[#D4AF37]"
+                  >
+                    Web3Forms
+                  </a>
+                  , a third-party form-to-email service. No backend or database of mine stores your submission.
+                </p>
+                <p>
+                  <span className="text-th-fg font-semibold">What's collected:</span> the name, email, subject,
+                  and message you enter above are forwarded directly to my inbox. Web3Forms does not retain
+                  form submissions once delivered.
+                </p>
+                <p>
+                  <span className="text-th-fg font-semibold">IP address:</span> Web3Forms logs your IP address,
+                  browser type, and timestamp for spam and abuse prevention, and may share your IP/email with
+                  its spam-filtering providers (CleanTalk, Akismet). These logs are periodically deleted.
+                </p>
+                <p>
+                  <span className="text-th-fg font-semibold">What I do with it:</span> I only use your message
+                  to reply to you. I don't add you to any mailing list or share your details elsewhere.
+                </p>
+                <p className="text-th-subtle text-xs pt-1">
+                  For full details, see Web3Forms'{" "}
+                  <a
+                    href="https://web3forms.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-[#D4AF37]"
+                  >
+                    Privacy Policy
+                  </a>.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

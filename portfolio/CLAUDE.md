@@ -19,7 +19,7 @@ Required in `.env` (Vite exposes these via `import.meta.env`):
 - `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` — Supabase project for reactions/clicks
 - `VITE_WEB3FORMS_KEY` — Web3Forms access key used in `BlogPost.jsx` for blog feedback submissions
 
-EmailJS credentials are hardcoded public keys inside `ContactForm.jsx` (intentional).
+`VITE_WEB3FORMS_KEY` is also used in `ContactForm.jsx` for the main contact form submission.
 
 ## Architecture
 
@@ -46,7 +46,7 @@ Reactions (likes/dislikes) and click counts are stored in **Supabase** (`reactio
 - **Projects.jsx** — Paginated (3 per page), initialises from `projects.js`, syncs counts from Supabase on mount, persists user reactions to localStorage. Touch-swipe enabled.
 - **ExperienceSection.jsx + CodeToAppAnimation.jsx** — Scroll-triggered animation using Framer Motion `useScroll`/`useTransform`.
 - **EducationSection.jsx** — Opens PDF files from `public/language/` in inline modals.
-- **ContactForm.jsx** — Sends email via EmailJS; credentials are in the component (public keys only).
+- **ContactForm.jsx** — Sends email via Web3Forms (`VITE_WEB3FORMS_KEY`), same service as the blog feedback form.
 - **NeuralBackground.jsx / CursorLight.jsx / FloatingWords.jsx** — Visual effects in the Hero area; no side effects outside the DOM.
 
 ### Styling conventions

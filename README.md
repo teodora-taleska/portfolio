@@ -14,7 +14,7 @@ A personal portfolio website showcasing my work in **Data Science, AI, and softw
 - **Blogs**: Paginated blog previews with reactions; full posts on dedicated pages
 - **Certificates**: Coverflow carousel with keyboard, trackpad, and touch swipe support
 - **Education**: Timeline with inline PDF viewer for language certificates and thesis
-- **Contact**: Email form powered by EmailJS (no backend required)
+- **Contact**: Email form powered by Web3Forms (no backend required)
 
 ---
 
@@ -25,7 +25,7 @@ A personal portfolio website showcasing my work in **Data Science, AI, and softw
 | Frontend   | React 19, Vite, TailwindCSS        |
 | Animations | Framer Motion                      |
 | Database   | Supabase (reactions & click counts)|
-| Email      | EmailJS                            |
+| Email      | Web3Forms                          |
 | Icons      | Lucide React                       |
 | Deployment | Vercel                             |
 
